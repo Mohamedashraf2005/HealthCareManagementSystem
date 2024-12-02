@@ -24,3 +24,6 @@ def input_age(age):
     except ValueError:  
         print("Invalid input: Must be a numeric value.")
         return None
+
+def check_gender ():
+    pass
