@@ -1,64 +1,75 @@
 import tkinter as tk
-from tkinter import ttk
-from PIL import Image, ImageTk  # استيراد المكتبة
+from tkinter import messagebox
+from PIL import Image, ImageTk
 
-# إنشاء نافذة التطبيق
+def login():
+    username = username_entry.get()
+    password = password_entry.get()
+    # هنا ممكن تضيف لوجيك تسجيل الدخول
+    messagebox.showinfo("Login", f"Username: {username}\nPassword: {password}")
+
+def back_action():
+    messagebox.showinfo("Back", "Going back!")
+
+# إنشاء النافذة الرئيسية
 root = tk.Tk()
-root.title("Health Portal")
-root.geometry("900x700")  # تحديد حجم النافذة
-root.configure(bg="#d9d9d9")  # لون الخلفية
-root.resizable(False, False)
+root.title("Banana Clinic")
+root.geometry("900x600")
+root.configure(bg="#EAEAFD")
 
-# 1. شريط التنقل في الأعلى
-menu_frame = tk.Frame(root, bg="#d9d9d9", height=50)
-menu_frame.pack(side="top", fill="x", pady=20, padx=200)
+# تقسيم النافذة إلى قسمين
+left_frame = tk.Frame(root, width=450, height=600, bg="#F4D0D0")
+left_frame.grid(row=0, column=0)
 
-menu_items = ["Home", "Doctors", "About Us", "Contact Us"]
-active_button = tk.StringVar(value="Home")  # اسم الزر النشط (افتراضيًا "Home")
+right_frame = tk.Frame(root, width=450, height=600, bg="#D1C8F0")
+right_frame.grid(row=0, column=1)
 
-# دالة لتغيير حالة الزر النشط
-def activate_button(button_name):
-    active_button.set(button_name)  # تحديث اسم الزر النشط
-    for widget in menu_frame.winfo_children():  # استعراض جميع الأزرار في القائمة
-        if widget.cget("text") == button_name:
-            widget.config(bg="#dadf4a", fg="#000000")  # الزر النشط (لون مختلف)
-        else:
-            widget.config(bg="#d9d9d9", fg="#000000")  # الأزرار الأخرى
+# شعار العيادة
+logo = tk.Label(left_frame, text="BANANA CLINIC", font=("Arial", 16, "bold"), bg="#F4D0D0", fg="#DF1515")
+logo.grid(row=0, column=0, pady=20)
 
-# إنشاء الأزرار
-for item in menu_items:
-    btn = tk.Button(
-        menu_frame,
-        text=item,
-        font=("Helvetica", 12, "bold"),
-        bg="#d9d9d9",
-        fg="#000000",
-        borderwidth=0,
-        command=lambda name=item: activate_button(name),  # تغيير الحالة عند الضغط
-    )
-    btn.pack(side="left", padx=20)
+# اختيار نوع الدخول
+select_label = tk.Label(left_frame, text="Select\nThe Type of\nLog In:", font=("Arial", 18, "bold"), bg="#F4D0D0", fg="black", justify="left")
+select_label.grid(row=1, column=0, padx=20)
 
-# 2. إضافة الصورة من المسار إلى الجهة اليسرى
-image_path = "D:\Life\Media\in\MAIN.png"  # مسار الصورة
-image = Image.open(image_path)  # فتح الصورة باستخدام Pillow
-image = image.resize((600, 500))  # تعديل حجم الصورة (لو لزم الأمر)
-image_tk = ImageTk.PhotoImage(image)  # تحويل الصورة لتنسيق Tkinter
+# صور الأنواع
+def create_button(frame, image_path, text):
+    img = Image.open(image_path).resize((100, 100))
+    img = ImageTk.PhotoImage(img)
+    button = tk.Button(frame, text=text, compound="top", image=img, bg="#F4D0D0", borderwidth=0)
+    button.image = img  # لتجنب حذف الصورة من الذاكرة
+    button.pack(side=tk.LEFT, padx=15)
+    return button
 
-# إضافة الصورة إلى واجهة المستخدم
-image_label = tk.Label(root, image=image_tk, bg="#d9d9d9")
-image_label.place(x=0, y=200)  # تحديد مكان الصورة
-# image_label.place(x=0, y=270)  # تحديد مكان الصورة
+buttons_frame = tk.Frame(left_frame, bg="#F4D0D0")
+buttons_frame.grid(row=2, column=0)
 
-# 3. النص الترحيبي
-welcome_label = tk.Label(root, text="Welcome\nBooking Your Health\n Journey Starts With \na One Click!", font=("Helvetica", 22, "bold"), bg="#d9d9d9", fg="#000000", justify="center")
-welcome_label.place(y=320, x=575)
+# أزرار الأنواع
+create_button(buttons_frame, "patient_icon.png", "Patient")
+create_button(buttons_frame, "doctor_icon.png", "Doctor")
+create_button(buttons_frame, "admin_icon.png", "Admin")
 
-# 4. زر "START"
-start_button = ttk.Button(root, text="START", command=lambda: print("Start Button Clicked!"),width=20)
-start_button.place(y=470, x=660)
+# شاشة تسجيل الدخول
+back_button = tk.Label(right_frame, text="< back", font=("Arial", 12, "underline"), bg="#D1C8F0", fg="blue", cursor="hand2")
+back_button.grid(row=0, column=0, sticky="w", padx=10, pady=10)
+back_button.bind("<Button-1>", lambda e: back_action())
 
-# تفعيل الزر الافتراضي عند التشغيل
-activate_button("Home")
+username_label = tk.Label(right_frame, text="Username", font=("Arial", 14), bg="#D1C8F0")
+username_label.grid(row=1, column=0, padx=50, pady=10)
 
-# تشغيل التطبيق
+username_entry = tk.Entry(right_frame, font=("Arial", 14), width=25)
+username_entry.grid(row=2, column=0, padx=50, pady=10)
+
+password_label = tk.Label(right_frame, text="Password", font=("Arial", 14), bg="#D1C8F0")
+password_label.grid(row=3, column=0, padx=50, pady=10)
+
+password_entry = tk.Entry(right_frame, font=("Arial", 14), width=25, show="*")
+password_entry.grid(row=4, column=0, padx=50, pady=10)
+
+login_button = tk.Button(right_frame, text="Log In", font=("Arial", 14), command=login)
+login_button.grid(row=5, column=0, pady=20)
+
+signup_label = tk.Label(right_frame, text="Sign up?", font=("Arial", 12), bg="#D1C8F0", fg="blue", cursor="hand2")
+signup_label.grid(row=6, column=0, pady=10)
+
 root.mainloop()
