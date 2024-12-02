@@ -25,5 +25,9 @@ def input_age(age):
         print("Invalid input: Must be a numeric value.")
         return None
 
-def check_gender ():
-    pass
+def check_gender (gender):
+    if gender.lower() == "male" or "female" :
+        return gender
+    else :
+        print("enter valid gender Male or Female")
+        return None
