@@ -15,8 +15,19 @@ def checkname(name):
 ## second way ##
 def input_age(age):
     try:
-        return int(age)  
-    except ValueError:
-        print("Invalid input")
+        age = int(age)  
+        if 0 <= age <= 120: 
+              return age
+        else:
+            print("Invalid input: Age must be between 0 and 120.")
+            return None
+    except ValueError:  
+        print("Invalid input: Must be a numeric value.")
         return None
 
+def check_gender (gender):
+    if gender.lower() == "male" or "female" :
+        return gender
+    else :
+        print("enter valid gender Male or Female")
+        return None
