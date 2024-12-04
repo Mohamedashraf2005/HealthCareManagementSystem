@@ -45,9 +45,9 @@ buttons_frame = tk.Frame(left_frame, bg="#F4D0D0")
 buttons_frame.grid(row=2, column=0)
 
 # أزرار الأنواع
-create_button(buttons_frame, "patient_icon.png", "Patient")
-create_button(buttons_frame, "doctor_icon.png", "Doctor")
-create_button(buttons_frame, "admin_icon.png", "Admin")
+create_button(buttons_frame, "patain.jpg", "Patient")
+create_button(buttons_frame, "doctorimage.jpg", "Doctor")
+create_button(buttons_frame, "admin.jpg", "Admin")
 
 # شاشة تسجيل الدخول
 back_button = tk.Label(right_frame, text="< back", font=("Arial", 12, "underline"), bg="#D1C8F0", fg="blue", cursor="hand2")
