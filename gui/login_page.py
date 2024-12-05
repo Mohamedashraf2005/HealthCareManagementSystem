@@ -3,7 +3,7 @@ from PIL import Image, ImageTk
 
 
 root = Tk()
-root.geometry("1200x950")  
+root.geometry("1200x750")  
 root.configure(bg="#B5B9F1")  
 root.title("Log In")
 root.resizable(False, False)   
