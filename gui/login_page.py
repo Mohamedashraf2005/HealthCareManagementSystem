@@ -13,7 +13,7 @@ def logo_image():
     """Add the logo at the top"""
     image = Image.open("logo.png").resize((150, 100))
     image = ImageTk.PhotoImage(image)
-    label = Label(root, text="BANANA CLINIC", compound="top", image=image, borderwidth=0, 
+    label = Label(root, text="DocHub", compound="top", image=image, borderwidth=0, 
                   font=("IM FELL Double Pica", 15, "bold"), bg="#B5B9F1")
     label.image = image
     label.place(x=10, y=0)
