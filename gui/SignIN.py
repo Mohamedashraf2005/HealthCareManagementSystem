@@ -8,10 +8,16 @@ root.configure(bg="#B5B9F1")
 root.title("Log In")
 root.resizable(False, False)   
 
+#switching Between pages here 
+def switch_to_signup():
+    root.destroy()  # Close the current window
+    import SignUP  
+    SignUP.main() 
+
 # Function for Logo
 def logo_image():
     """Add the logo at the top"""
-    image = Image.open("logo.png").resize((150, 100))
+    image = Image.open("PHOTO\logo.png").resize((150, 100))
     image = ImageTk.PhotoImage(image)
     label = Label(root, text="DocHub", compound="top", image=image, borderwidth=0, 
                   font=("IM FELL Double Pica", 15, "bold"), bg="#B5B9F1")
@@ -99,17 +105,11 @@ def on_entry_click(event):
 username_entry.bind("<FocusIn>", on_entry_click)  # On clicking the username field
 password_entry.bind("<FocusIn>", on_entry_click)  # On clicking the password field
 
-# Function to navigate the user to the signup page when "Sign Up?" is clicked
-def sign_up():
-    """Function executed when "Sign Up?" button is clicked"""
-    error_message.config(text="You can sign up as a patient.")
+
 
 # "Sign Up?" button
-sign_up_button = Button(root, text="Sign Up?", font=("Arial", 12, "bold"), bg="#8A8EBF", fg="white", width=10, command=sign_up)
+sign_up_button = Button(root, text="Sign Up?", font=("Arial", 12, "bold"), bg="#8A8EBF", fg="white", width=10, command=switch_to_signup)
 
-# Back button
-btn1 = Button(root, text="<back", font=("IM FELL Double Pica", 15, "bold"), 
-              fg="SteelBlue", bg="#B5B9F1", borderwidth=0)
-btn1.place(x=1125, y=10)
+
 
 root.mainloop()

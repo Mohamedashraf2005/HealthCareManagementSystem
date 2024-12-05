@@ -8,6 +8,12 @@ root.title('Log In')
 root.resizable(False, False)
 root.config(background='#B5B9F1')
 
+#switching Between pages here 
+def switch_to_signin():
+    root.destroy()  # Close the current window
+    import SignIN  
+    SignIN.main() 
+
 
 f1 = Frame(width=1200, height=70, bg='#B5B9F1')  
 f1.place(x=1, y=0)
@@ -36,49 +42,49 @@ f_sign_in.place(x=0, y=200)
 lab_sign_in_title = ctk.CTkLabel(f_sign_in, text="Sign Up", fg_color='#B5B9F1', text_color='black', font=('Helvetica', 28))
 lab_sign_in_title.place(x=250, y=0)
 
-
 lab_username = Label(f_sign_in, text="Name:", bg='#B5B9F1', font=("Arial", 16))  
 lab_username.place(x=50, y=50)
 
 entry_username = ctk.CTkEntry(f_sign_in, width=300, height=35, corner_radius=10, border_width=2, border_color="black", fg_color="white", text_color="black", placeholder_text="Enter your username")  
 entry_username.place(x=160, y=50)
 
-lab_password = Label(f_sign_in, text="Password:", bg='#B5B9F1', font=("Arial", 16))  
-lab_password.place(x=50, y=100)
-
-entry_password = ctk.CTkEntry(f_sign_in, width=300, height=35, corner_radius=10, border_width=2, border_color="black", fg_color="white", text_color="black", placeholder_text="Enter your password", show="*")  
-entry_password.place(x=160, y=100)
-
-lab_name = Label(f_sign_in, text="UserName:", bg='#B5B9F1', font=("Arial", 16))  
-lab_name.place(x=50, y=150)
+lab_name = Label(f_sign_in, text="Username:", bg='#B5B9F1', font=("Arial", 16))  
+lab_name.place(x=50, y=100)
 
 entry_name = ctk.CTkEntry(f_sign_in, width=300, height=35, corner_radius=10, border_width=2, border_color="black", fg_color="white", text_color="black", placeholder_text="Enter your name")  
-entry_name.place(x=160, y=150)
+entry_name.place(x=160, y=100)
 
 lab_age = Label(f_sign_in, text="Age:", bg='#B5B9F1', font=("Arial", 16))  
-lab_age.place(x=50, y=200)
+lab_age.place(x=50, y=150)
 
 entry_age = ctk.CTkEntry(f_sign_in, width=300, height=35, corner_radius=10, border_width=2, border_color="black", fg_color="white", text_color="black", placeholder_text="Enter your age")  
-entry_age.place(x=160, y=200)
+entry_age.place(x=160, y=150)
 
 lab_phone = Label(f_sign_in, text="Phone:", bg='#B5B9F1', font=("Arial", 16))  
-lab_phone.place(x=50, y=250)
+lab_phone.place(x=50, y=200)
 
 entry_phone = ctk.CTkEntry(f_sign_in, width=300, height=35, corner_radius=10, border_width=2, border_color="black", fg_color="white", text_color="black", placeholder_text="Enter your phone")  
-entry_phone.place(x=160, y=250)
+entry_phone.place(x=160, y=200)
 
-lab_gender = Label(f_sign_in, text="Gender:", bg='#B5B9F1', font=("Arial", 16))  
+lab_password = Label(f_sign_in, text="Password:", bg='#B5B9F1', font=("Arial", 16))  
+lab_password.place(x=50, y=250)
+
+entry_password = ctk.CTkEntry(f_sign_in, width=300, height=35, corner_radius=10, border_width=2, border_color="black", fg_color="white", text_color="black", placeholder_text="Enter your password", show="*")  
+entry_password.place(x=160, y=250)
+
+lab_gender = Label(f_sign_in, text="Gender", bg='#B5B9F1', font=("Arial", 16))  
 lab_gender.place(x=50, y=300)
 
 gender_var = StringVar(value="Male")  
 radio_male = ctk.CTkRadioButton(f_sign_in, text="Male", variable=gender_var, value="Male")
-radio_male.place(x=160, y=305)
+radio_male.place(x=160, y=300)
 
 radio_female = ctk.CTkRadioButton(f_sign_in, text="Female", variable=gender_var, value="Female")
-radio_female.place(x=230, y=305)
+radio_female.place(x=230, y=300)
 
 
-btn_submit = ctk.CTkButton(f_sign_in, text="SIGN IN", fg_color='#A3A6F1', text_color='black', corner_radius=20)
+
+btn_submit = ctk.CTkButton(f_sign_in, text="SIGN UP", fg_color='#A3A6F1', text_color='black', corner_radius=20,command=switch_to_signin)
 btn_submit.place(x=250, y=350)
 
 
