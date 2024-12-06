@@ -1,3 +1,4 @@
+import sqlite3
 from tkinter import messagebox
 import customtkinter as ctk
 from tkinter import *
@@ -30,6 +31,42 @@ class SignUp:
         self.create_sign_in_frame()
         self.create_image_frame()
         # self.create_back_button()
+
+    def create_database(self):
+        """Create the SQLite database and table if they do not exist."""
+        conn = sqlite3.connect(r"C:\Users\Anas\OneDrive\Desktop\HealthCareManagementSystem\database\HCMSclinic.db")  # Create or connect to the database
+        cursor = conn.cursor()
+
+        # Create a table for users
+        cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            name TEXT NOT NULL,
+                            username TEXT NOT NULL UNIQUE,
+                            age INTEGER,
+                            phone TEXT,
+                            gender TEXT,
+                            password TEXT NOT NULL)''')
+        conn.commit()
+        conn.close()
+
+    def insert_data_to_db(self, name, username, age, phone, gender, password):
+        """Insert user data into the database."""
+        try:
+            conn = sqlite3.connect(r"C:\Users\Anas\OneDrive\Desktop\HealthCareManagementSystem\database\HCMSclinic.db")
+            cursor = conn.cursor()
+
+            # Insert data into the table
+            cursor.execute("INSERT INTO users (name, username, age, phone, gender, password) VALUES (?, ?, ?, ?, ?, ?)",
+                           (name, username, age, phone, gender, password))
+            conn.commit()
+            conn.close()
+            self.warning_label.config(text="Registration Successful!", fg="green")
+        except sqlite3.IntegrityError:
+            self.warning_label.config(text="Username already exists!", fg="red")
+        except Exception as e:
+            self.warning_label.config(text=f"Error: {e}", fg="red")
+    
+    
 
     def logo_image(self):
         """Add the logo at the top of the window"""
@@ -97,7 +134,13 @@ class SignUp:
         else:
             self.warning_label.config(text="") 
 
-
+    def checkage(self,age):
+        try:
+            age = int(age)  
+            return 0 <= age <= 120 
+        except ValueError:  
+            return False
+        
     def submit_registration(self):
         """Handle registration submission"""
         # Collect all input values
@@ -116,7 +159,15 @@ class SignUp:
         if not name.replace(" ", "").isalpha():
             self.warning_label.config(text="Invalid name! Use only letters.", fg="red")
             return
+        
+        if not self.checkage(age):
+            self.warning_label.config(text="Invalid Age! Enter a number between 0 and 120.")
+            return
+            
+        self.warning_label.config(text="Registration Successful!", fg="green")
 
+        self.insert_data_to_db(name, username, age, phone, gender, password)
+        
         # Print user details
         print("Registration details:")
         print(f"Name: {name}")

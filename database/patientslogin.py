@@ -13,24 +13,24 @@ def checkname(name):
 #     else:
 #         return int(age)  
 ## second way ##
-def input_age(age):
-    try:
-        age = int(age)  
-        if 0 <= age <= 120: 
-              return age
-        else:
-            print("Invalid input: Age must be between 0 and 120.")
-            return None
-    except ValueError:  
-        print("Invalid input: Must be a numeric value.")
-        return None
+# def input_age(age):
+#     try:
+#         age = int(age)  
+#         if 0 <= age <= 120: 
+#               return True
+#         else:
+#             print("Invalid input: Age must be between 0 and 120.")
+#             return False
+#     except ValueError:  
+#         print("Invalid input: Must be a numeric value.")
+#         return None
 
-def check_gender (gender):
-    if gender.lower() == "male" or "female" :
-        return gender
-    else :
-        print("enter valid gender Male or Female")
-        return None
+# def check_gender (gender):
+#     if gender.lower() == "male" or "female" :
+#         return gender
+#     else :
+#         print("enter valid gender Male or Female")
+#         return None
 #eman mohamed creat 2 fanctions : 1=>check for username
 #                                 2=>check for password
 import sqlite3
