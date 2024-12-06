@@ -1,6 +1,10 @@
+from tkinter import messagebox
 import customtkinter as ctk
 from tkinter import *
 from PIL import ImageTk, Image
+
+# from database.patientslogin import checkname
+
 
 class SignUp:
     def __init__(self, container, app):
@@ -8,10 +12,10 @@ class SignUp:
         # Create frame within the container
         self.frame = Frame(container, width=1200, height=750, bg='#B5B9F1')
         self.frame.grid(row=0, column=0, sticky="nsew")
-        
+
         # Store reference to the main application
         self.app = app
-        
+
         # Variables to store input values
         self.name_entry = None
         self.password_entry = None
@@ -19,18 +23,19 @@ class SignUp:
         self.age_entry = None
         self.phone_entry = None
         self.gender_var = StringVar(value="Male")
-        
+        self.warning_label = None  # Warning label for Name validation
+
         # Initialize UI components
         self.logo_image()
         self.create_sign_in_frame()
         self.create_image_frame()
         # self.create_back_button()
-    
+
     def logo_image(self):
         """Add the logo at the top of the window"""
         image = Image.open("logo.png").resize((150, 100))  # Resize the logo
         image = ImageTk.PhotoImage(image)  # Convert image to Tkinter format
-        label = Label(self.frame, text="DocHub", compound="top", image=image, borderwidth=0, 
+        label = Label(self.frame, text=" ", compound="top", image=image, borderwidth=0,
                       font=("IM FELL Double Pica", 15, "bold"), bg="#B5B9F1")
         label.image = image  # Keep a reference to the image
         label.place(x=10, y=0)  # Position the label
@@ -38,75 +43,91 @@ class SignUp:
 
     def create_sign_in_frame(self):
         """Create the sign-in form with input fields and buttons"""
-        f_sign_in = Frame(self.frame, width=600, height=500, bg='#B5B9F1')  
-        f_sign_in.place(x=0, y=200)
-        
-        lab_sign_in_title = ctk.CTkLabel(f_sign_in, text="Sign Up", fg_color='#B5B9F1', 
-                                          text_color='black', font=('Helvetica', 28))
-        lab_sign_in_title.place(x=250, y=0)
-        
+        f_sign_in = Frame(self.frame, width=600, height=500, bg='#B5B9F1')
+        f_sign_in.place(x=200, y=200) #just test by ashraf you could replace it
+        lab_sign_in_title = ctk.CTkLabel(f_sign_in, text="Create Account", fg_color='#B5B9F1',
+                                         text_color='black', font=('Helvetica', 28))
+        lab_sign_in_title.place(x=205, y=0)
         # Create input fields for each user detail
-        self.name_entry = self.create_input_field(f_sign_in, "Name:", 50)
-        self.password_entry = self.create_input_field(f_sign_in, "Password:", 250, show="*")
-        self.username_entry = self.create_input_field(f_sign_in, "Username:", 100)
-        self.age_entry = self.create_input_field(f_sign_in, "Age:", 150)
-        self.phone_entry = self.create_input_field(f_sign_in, "Phone:", 200)
-
+        self.name_entry = self.create_input_field(f_sign_in, "Name", 50)
+        self.username_entry = self.create_input_field(f_sign_in, "username", 100)
+        self.age_entry = self.create_input_field(f_sign_in, "Age", 150)
+        self.phone_entry = self.create_input_field(f_sign_in, "Phone", 200)
+        self.password_entry = self.create_input_field(f_sign_in, "Password", 250, show="*")
+        # Warning label for name validation
+        self.warning_label = Label(f_sign_in, text="", fg="red", bg="#B5B9F1", font=("Arial", 10))
+        self.warning_label.place(x=460, y=55)  # Position below Name entry field
+        # Bind focus-out event to Name entry for validation
+        self.name_entry.bind("<FocusOut>", self.validate_name)
         # Gender radio buttons for Male/Female selection
-        lab_gender = Label(f_sign_in, text="Gender:", bg='#B5B9F1', font=("Arial", 16))  
-        lab_gender.place(x=50, y=300)
-        
+        # lab_gender = Label(f_sign_in, text="Gender", bg='#B5B9F1', font=("Arial", 16))
+        # lab_gender.place(x=160, y=300)
+
         radio_male = ctk.CTkRadioButton(f_sign_in, text="Male", variable=self.gender_var, value="Male")
-        radio_male.place(x=160, y=305)
+        radio_male.place(x=180, y=305)
         radio_female = ctk.CTkRadioButton(f_sign_in, text="Female", variable=self.gender_var, value="Female")
-        radio_female.place(x=230, y=305)
+        radio_female.place(x=350, y=305)
 
         # Submit button to complete the sign-in process
-        btn_submit = ctk.CTkButton(f_sign_in, text="SIGN UP", fg_color='#A3A6F1', 
+        btn_submit = ctk.CTkButton(f_sign_in, text=" Sign Up", fg_color='#A3A6F1',
                                     text_color='black', corner_radius=20,
-                                    command=self.submit_registration)
-        btn_submit.place(x=250, y=350)
+                                    command=self.submit_registration, font=("Arial", 17))
+        btn_submit.place(x=240, y=350)
 
     def create_input_field(self, frame, label_text, y_pos, show=None):
         """Helper function to create input fields for Name, Password, etc."""
-        label = Label(frame, text=label_text, bg='#B5B9F1', font=("Arial", 16))  
-        label.place(x=50, y=y_pos)
-        entry = ctk.CTkEntry(frame, width=300, height=35, corner_radius=10, border_width=2, 
-                             border_color="black", fg_color="white", text_color="black", 
-                             placeholder_text=f"Enter your {label_text.lower()}", show=show)
+        # label = Label(frame, text=label_text, bg='#B5B9F1', font=("Arial", 16))
+        # label.place(x=50, y=y_pos)
+        entry = ctk.CTkEntry(frame, width=300, height=35, corner_radius=10, border_width=1.5,
+                             border_color="black", fg_color="white", text_color="black",
+                             placeholder_text=f"{label_text}", show=show)
         entry.place(x=160, y=y_pos)
         return entry
+
+    def checkname(self,name):
+        for i in name:
+            if not (i.isalpha() or i.isspace()):
+                return False
+        return True
+
+    def validate_name(self, event):
+        name = self.name_entry.get()
+        if not self.checkname(name): 
+            self.warning_label.config(text="Invalid!Use only letters.")
+        else:
+            self.warning_label.config(text="") 
+
 
     def submit_registration(self):
         """Handle registration submission"""
         # Collect all input values
         name = self.name_entry.get()
-        password = self.password_entry.get()
         username = self.username_entry.get()
         age = self.age_entry.get()
         phone = self.phone_entry.get()
+        password = self.password_entry.get()
         gender = self.gender_var.get()
 
         # Basic validation
-        if not all([name, password, username, age, phone]):
-            # You might want to show an error message
-            print("Please fill in all fields")
+        if not all([name, username, age, phone, password]):
+            messagebox.showwarning("Registration Warning", "Please Fill All Fields")
             return
 
-        # Here you would typically:
-        # 1. Validate inputs
-        # 2. Check if username already exists
-        # 3. Hash the password
-        # 4. Save to database
+        if not name.replace(" ", "").isalpha():
+            self.warning_label.config(text="Invalid name! Use only letters.", fg="red")
+            return
+
+        # Print user details
         print("Registration details:")
         print(f"Name: {name}")
         print(f"Username: {username}")
         print(f"Age: {age}")
         print(f"Phone: {phone}")
         print(f"Gender: {gender}")
+        print("########")
 
         # Redirect to login or welcome page
-        self.app.show_frame('LogIn')
+        # self.app.show_frame('LogIn')
 
     def create_image_frame(self):
         """Create the frame that holds the image on the right side"""

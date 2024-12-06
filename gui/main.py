@@ -27,6 +27,7 @@ class MainApplication:
     
     def show_frame(self, cont):
         """Raise the specified frame to the top"""
+        #Hena 3shan nshoof men s9alllll
         print(self.frames.keys())
         frame = self.frames[cont]
         frame.frame.tkraise()
