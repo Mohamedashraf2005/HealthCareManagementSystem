@@ -38,8 +38,7 @@ class SignUp:
         cursor = conn.cursor()
 
         # Create a table for users
-        cursor.execute('''CREATE TABLE IF NOT EXISTS users (
-                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+        cursor.execute('''CREATE TABLE IF NOT EXISTS patient (
                             name TEXT NOT NULL,
                             username TEXT NOT NULL UNIQUE,
                             age INTEGER,
@@ -99,7 +98,7 @@ class SignUp:
         # Gender radio buttons for Male/Female selection
         # lab_gender = Label(f_sign_in, text="Gender", bg='#B5B9F1', font=("Arial", 16))
         # lab_gender.place(x=160, y=300)
-
+    
         radio_male = ctk.CTkRadioButton(f_sign_in, text="Male", variable=self.gender_var, value="Male")
         radio_male.place(x=180, y=305)
         radio_female = ctk.CTkRadioButton(f_sign_in, text="Female", variable=self.gender_var, value="Female")
