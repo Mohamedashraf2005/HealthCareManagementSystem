@@ -32,32 +32,14 @@ class SignUp:
         self.create_image_frame()
         # self.create_back_button()
 
-    def insert_patient(self, name, username, password, age, gender, phone):
-        """Insert patient details into the database."""
-        conn = sqlite3.connect(r"C:\Users\Anas\OneDrive\Desktop\HealthCareManagementSystem\database\HCMSclinic.db")
-        cursor = conn.cursor()
-
-        insert_query = """
-        INSERT INTO patient (name, username, password, age, gender, phone)
-        VALUES (?, ?, ?, ?, ?, ?)
-        """
-        try:
-            cursor.execute(insert_query, (name, username, password, int(age), gender, phone))
-            conn.commit()
-            messagebox.showinfo("Success", "Registration Successful!")
-        except sqlite3.IntegrityError:
-            messagebox.showerror("Error", "Username already exists. Please choose a different username.")
-        except sqlite3.Error as e:
-            messagebox.showerror("Database Error", f"An error occurred: {e}")
-        finally:
-            conn.close()
 
     def logo_image(self):
         """Add the logo at the top of the window."""
-        image = Image.open("logo.png").resize((150, 100))  # Resize the logo
+        image = Image.open("logo.png").resize((110, 100))  # Resize the logo
         image = ImageTk.PhotoImage(image)  # Convert image to Tkinter format
-        label = Label(self.frame, text=" ", compound="top", image=image, borderwidth=0,
-                      font=("IM FELL Double Pica", 15, "bold"), bg="#B5B9F1")
+        label = Label(self.frame, text="DOCHUB", compound="top", image=image, borderwidth=0,
+                      font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1",fg='#194C7C')
+        
         label.image = image  # Keep a reference to the image
         label.place(x=10, y=0)  # Position the label
         return label
@@ -123,7 +105,25 @@ class SignUp:
             return 0 <= age <= 120 
         except ValueError:  
             return False
-        
+    def insert_patient(self, name, username, password, age, gender, phone):
+        """Insert patient details into the database."""
+        conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\gui\HCMSclinic.db")
+        cursor = conn.cursor()
+
+        insert_query = """
+        INSERT INTO patient (name, username, password, age, gender, phone)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """
+        try:
+            cursor.execute(insert_query, (name, username, password, int(age), gender, phone))
+            conn.commit()
+            messagebox.showinfo("Success", "Registration Successful!")
+        except sqlite3.IntegrityError:
+            messagebox.showerror("Error", "Username already exists. Please choose a different username.")
+        except sqlite3.Error as e:
+            messagebox.showerror("Database Error", f"An error occurred: {e}")
+        finally:
+            conn.close()
     def submit_registration(self):
         """Handle registration submission."""
         # Collect all input values

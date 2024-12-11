@@ -6,9 +6,12 @@ from SignUP import SignUp
 
 class WelcomePage:
     def __init__(self, container, app):
-        # Create frame within the container
         self.frame = Frame(container, width=1200, height=750, bg='#B5B9F1')
         self.frame.grid(row=0, column=0, sticky="nsew")
+        self.app = app
+        self.frame.config(background='#B5B9F1')
+        self.logo_image()
+        self.create_widgets()
         
         # Store reference to the main application
         self.app = app
@@ -20,7 +23,7 @@ class WelcomePage:
         self.create_widgets()
 
     def logo_image(self):
-        image = Image.open("logo.png").resize((150, 100)).convert("RGBA")
+        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
         datas = image.getdata()
         new_data = []
         for item in datas:
