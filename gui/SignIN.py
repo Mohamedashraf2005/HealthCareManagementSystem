@@ -1,7 +1,8 @@
 from tkinter import Label, Button, Entry, Frame, DISABLED, NORMAL
 from PIL import Image, ImageTk
 from SignUP import SignUp
-
+import sqlite3
+import dbfunctions as dbf
 class LogIn:
     def __init__(self, container, app):
         """Initialize the login page frame and setup all UI components."""
@@ -27,10 +28,10 @@ class LogIn:
 
     def logo_image(self):
         """Add the logo at the top"""
-        image = Image.open("logo.png").resize((150, 100))
+        image = Image.open("logo.png").resize((110, 100))
         image = ImageTk.PhotoImage(image)
         label = Label(self.frame, text="DocHub", compound="top", image=image, borderwidth=0,
-                      font=("IM FELL Double Pica", 15, "bold"), bg="#B5B9F1")
+                      font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1",fg='#194C7C')
         label.image = image  # Prevent image deletion from memory
         label.place(x=10, y=0)
         return label
@@ -121,7 +122,10 @@ class LogIn:
         """Check if an account type has been selected before attempting to log in"""
         if self.validate_account_selection():
             # Add the code here for login verification
-            self.error_message.config(text="")  # Hide the error message if login is successful
+            if dbf.check_username(self.username_entry.get()) and dbf.check_password(self.username_entry.get(),self.password_entry.get()):
+                print("succesfully")
+            else:
+                self.error_message.config(text="Wrong username or Password,Try Again!")  # Hide the error message if login is successful
 
     def on_entry_click(self, event):
         """Handle interaction with input fields before account type selection"""
