@@ -12,19 +12,19 @@ class AdminDashboard:
         self.root.title("Admin Dashboard")
         self.root.resizable(False, False)
 
-        # self.logo_image()
+        self.logo_image()
         self.add_logout_button()
         self.add_welcome_message()
         self.add_statistics_with_curves()
         self.add_buttons_with_curves()
 
-    # def logo_image(self):
-    #     image = Image.open("logo.png").resize((150, 100))
-    #     image = ImageTk.PhotoImage(image)
-    #     label = Label(self.root, text="DocHub", compound="top", image=image, borderwidth=0,
-    #                   font=("IM FELL Double Pica", 15, "bold"), bg="#B5B9F1")
-    #     label.image = image  # Prevent image deletion from memory
-    #     label.place(x=0, y=0)
+    def logo_image(self):
+        image = Image.open("logo.png").resize((150, 100))
+        image = ImageTk.PhotoImage(image)
+        label = Label(self.root, text="DocHub", compound="top", image=image, borderwidth=0,
+                      font=("IM FELL Double Pica", 15, "bold"), bg="#B5B9F1")
+        label.image = image  # Prevent image deletion from memory
+        label.place(x=0, y=0)
 
     def add_logout_button(self):
         f1 = Frame(self.root, width=1100, height=50, bg='#B5B9F1')
