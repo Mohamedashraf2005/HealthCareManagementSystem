@@ -2,6 +2,8 @@ from tkinter import Label, Button, Entry, Frame, DISABLED, NORMAL
 from PIL import Image, ImageTk
 from SignUP import SignUp
 from AdminDashboard import AdminDashboard
+from Doctor_Dpage import DoctorPage
+from patient_Dpage import PatientPage
 import sqlite3
 import dbfunctions as dbf
 class LogIn:
@@ -28,16 +30,22 @@ class LogIn:
         self.logo_image()
         self.create_buttons()
         self.create_login_form()
-        self.create_back_button()
 
     def logo_image(self):
-        """Add the logo at the top"""
-        image = Image.open("logo.png").resize((110, 100))
+        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        datas = image.getdata()
+        new_data = []
+        for item in datas:
+            if item[0] > 200 and item[1] > 200 and item[2] > 200:
+                new_data.append((255, 255, 255, 0))
+            else:
+                new_data.append(item)
+        image.putdata(new_data)
         image = ImageTk.PhotoImage(image)
-        label = Label(self.frame, text="DocHub", compound="top", image=image, borderwidth=0,
-                      font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1",fg='#194C7C')
-        label.image = image  # Prevent image deletion from memory
-        label.place(x=10, y=0)
+        label = Label(self.frame, text='DocHub', compound="top", image=image, borderwidth=0,
+                      font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1", fg='#194C7C')
+        label.image = image
+        label.place(x=0, y=0)
         return label
 
     def show_login(self, title):
@@ -139,12 +147,6 @@ class LogIn:
                                       bg="#8A8EBF", fg="white", width=10, 
                                       command=self.attempt_loginD)
 
-    def create_back_button(self):
-        """Create the back button"""
-        btn1 = Button(self.frame, text="<back", font=("IM FELL Double Pica", 15, "bold"),
-                      fg="SteelBlue", bg="#B5B9F1", borderwidth=0,
-                      command=lambda: self.app.show_frame('WelcomePage'))
-        btn1.place(x=1125, y=10)
 
     def validate_account_selection(self):
         """Ensure the user has selected an account type before interacting with fields or clicking Login"""
@@ -158,7 +160,7 @@ class LogIn:
         if self.validate_account_selection():
             # Add the code here for login verification
             if dbf.check_username(self.username_entry.get()) and dbf.check_password(self.username_entry.get(),self.password_entry.get()):
-                print("succesfully ya ta3baaan")
+                self.app.show_frame(PatientPage)
             else:
                 self.error_message.config(text="Wrong username or Password,Try Again!")  # Hide the error message if login is successful
 
@@ -167,7 +169,7 @@ class LogIn:
         if self.validate_account_selection():
             # Add the code here for login verification
             if dbf.check_usernameD(self.username_entry.get()) and dbf.check_passwordD(self.username_entry.get(),self.password_entry.get()):
-                print("succesfully ya doctooooor")
+               self.app.show_frame(DoctorPage)
             else:
                 self.error_message.config(text="Wrong doctor or Password,Try Again!")  # Hide the error message if login is successful
 

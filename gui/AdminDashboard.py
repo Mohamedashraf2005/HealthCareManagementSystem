@@ -4,15 +4,19 @@ import customtkinter as ctk
 from PIL import Image, ImageTk
 from tkinter import ttk
 import sqlite3
+import time
+from threading import Thread
 
 class AdminDashboard:
     def __init__(self, container, app):
+
 
         self.frame = Frame(container, width=1200, height=750, bg="#B5B9F1")
         self.frame.grid(row=0, column=0, sticky="nsew")
         # self.frame.title("Admin Dashboard")
         # self.frame.resizable(False, False)
         ###
+        self.master = app  # Reference to MainApplication
         self.app = app
         ###
         self.logo_image()
@@ -21,28 +25,57 @@ class AdminDashboard:
         self.add_statistics_with_curves()
         self.add_buttons_with_curves()
 
-    def logo_image(self):
-        image = Image.open("logo.png").resize((150, 100))
+   
+
+
+
+    def logo_image(self):   
+        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        datas = image.getdata()
+        new_data = []
+        for item in datas:
+            if item[0] > 200 and item[1] > 200 and item[2] > 200:
+                new_data.append((255, 255, 255, 0))
+            else:
+                new_data.append(item)
+        image.putdata(new_data)
         image = ImageTk.PhotoImage(image)
-        label = Label(self.frame, text="DocHub", compound="top", image=image, borderwidth=0,
-                      font=("IM FELL Double Pica", 15, "bold"), bg="#B5B9F1")
-        label.image = image  # Prevent image deletion from memory
+
+        label = Label(self.frame, text='DocHub', compound="top", image=image, borderwidth=0,
+                      font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1", fg='#194C7C')
+        label.image = image
+
         label.place(x=0, y=0)
+        return label
 
     def add_logout_button(self):
         f1 = Frame(self.frame, width=1100, height=50, bg='#B5B9F1')
         f1.place(x=150, y=25)
         
-        button1 = ctk.CTkButton(f1,text='Log Out', fg_color='#336EA6', text_color='white', border_width=2, border_color='#336EA6', corner_radius=20, hover_color='#B5B9F1')
+        button1 = ctk.CTkButton(
+            f1, 
+            text='Log Out', 
+            fg_color='#336EA6', 
+            text_color='white', 
+            border_width=2, 
+            border_color='#336EA6', 
+            corner_radius=20, 
+            hover_color='#B5B9F1', 
+            command=self.master.root.destroy
+        )
+
+
         button1.place(x=850, y=12)
 
 
     def add_welcome_message(self):
-        welcome_label = Label(self.frame, text="Welcome, Admin..", font=("Arial", 18, "bold"), bg="#B5B9F1", fg="#fff")
-        welcome_label.place(x=530, y=30)
+
+        welcome_label = Label(self.frame, text="Welcome, Admin..", font=("Arial", 18, "bold"), bg="#B5B9F1", fg="#000")
+        welcome_label.place(x=500, y=30)
+
 
     def add_statistics_with_curves(self):
-        conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+        conn = sqlite3.connect("HCMSclinic.db")
         ptpatient=conn.execute("""
                         SELECT MAX(id)
                         FROM patient;                       
@@ -61,9 +94,9 @@ class AdminDashboard:
             ("Balance", "78,000$"),
         ]
 
-        x_positions = [350, 550, 750]  
+        x_positions = [275, 530, 780]  
         for i, (text, value) in enumerate(stats):
-            self.create_rounded_frame(x_positions[i], 80, 150, 100, text, value)#y-axis,w-frame,h-frame,text-frame
+            self.create_rounded_frame(x_positions[i], 80, 150, 80, text, value)#y-axis,w-frame,h-frame,text-frame
 
     def add_buttons_with_curves(self):
         buttons = [
@@ -74,9 +107,9 @@ class AdminDashboard:
             ("Remove Doc", self.remove_doc),
         ]
 
-        x_positions = [230,390, 550, 710, 870] 
+        x_positions = [190,360, 530, 700, 870] 
         for i, (text, command) in enumerate(buttons):
-            self.create_rounded_button(x_positions[i], 185, 150, 50, text, command)
+            self.create_rounded_button(x_positions[i], 180, 150, 50, text, command)
 
     def create_rounded_frame(self, x, y, width, height, text, value):
         canvas = Canvas(self.frame, width=width, height=height, bg="#B5B9F1", highlightthickness=0)
@@ -173,7 +206,9 @@ class AdminDashboard:
                 widget.destroy()
                     # Create a frame for the text box
         text_box_frame = Frame(self.frame, bg="#f8f9fa")
-        text_box_frame.place(x=250, y=250, width=800, height=40)  # Adjust position and size as needed
+
+        text_box_frame.place(x=208, y=250, width=800, height=40)  # Adjust position and size as needed
+
 
         # Create a text box (Entry widget) to display patient info, centered and with no background
         patient_info_entry = Entry(
@@ -195,7 +230,9 @@ class AdminDashboard:
 
         # Create a modern frame for the patient data
         patient_frame = Frame(self.frame, name="patient_frame", bg="#f8f9fa", bd=0)
-        patient_frame.place(x=250, y=300, width=800, height=400)  # Adjust position and size as needed
+
+        patient_frame.place(x=208, y=300, width=800, height=400)  # Adjust position and size as needed
+
 
         # Create a canvas to hold the frame
         canvas = Canvas(patient_frame, bg="#f8f9fa", bd=0, highlightthickness=0)
@@ -222,7 +259,7 @@ class AdminDashboard:
         Label(header_framedoctor, text="Phone", bg="grey", fg="white", font=("Arial", 10, "bold"), width=15).pack(side=LEFT, padx=5, pady=5)
 
         # Add some sample patient data
-        connviewpateints = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+        connviewpateints = sqlite3.connect(r"C:\Users\lOl\Documents\GitHub\HealthCareManagementSystem\database\HCMSclinic.db")
         ptviewpatient=connviewpateints.execute("""
                         SELECT id,name,username,age,gender,phone
                         FROM patient;                       
@@ -270,7 +307,9 @@ class AdminDashboard:
             if isinstance(widget, Frame) and widget.winfo_name() == "doctor_frame":
                 widget.destroy()
             text_box_frame2 = Frame(self.frame, bg="#f8f9fa")
-            text_box_frame2.place(x=250, y=250, width=800, height=40)  
+
+            text_box_frame2.place(x=208, y=250, width=800, height=40)  
+
 
             doctor_info_entry = Entry(
                 text_box_frame2,
@@ -290,7 +329,8 @@ class AdminDashboard:
 
         # Create a modern frame for the doctor data
         doctor_frame = Frame(self.frame, name="doctor_frame", bg="#f8f9fa", bd=0)
-        doctor_frame.place(x=250, y=300, width=800, height=400)
+
+        doctor_frame.place(x=208, y=300, width=800, height=400)
 
         # Create a canvas to hold the frame
         canvas = Canvas(doctor_frame, bg="#f8f9fa", bd=0, highlightthickness=0)
@@ -321,7 +361,7 @@ class AdminDashboard:
         Label(header_frame, text="Sessionfee", bg="grey", fg="white", font=("Arial", 10, "bold"), width=15).pack(side=LEFT, padx=5, pady=5)
 
         # Fetch doctor data
-        connviewdoc = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+        connviewdoc = sqlite3.connect(r"C:\Users\lOl\Documents\GitHub\HealthCareManagementSystem\database\HCMSclinic.db")
         ptviewdoc = connviewdoc.execute("""
                         SELECT id,name, username, age, gender, phone,SessionfeeEGP
                         FROM doctor;
@@ -369,8 +409,28 @@ class AdminDashboard:
     def remove_doc(self):
         print("Remove Doc clicked")
 
+    def show_splash_then_exit(self):
+        def splash_screen():
+            # Create a new top-level window (splash screen)
+            splash = ctk.CTkToplevel(self.master.root)
+            splash.geometry("300x150+500+300")
+            splash.title("Goodbye!")
+            
+            # Add a label to the splash screen
+            ctk.CTkLabel(splash, text="Thank you for using DocHub!", font=("Arial", 14)).pack(pady=20)
+            
+            # Close splash after 2 seconds
+            splash.after(2000, lambda: splash.destroy())
+            
+            # Close the main application after 2.5 seconds
+            self.master.root.after(2500, self.master.root.destroy)
+
+        # Run the splash screen in a separate thread to avoid blocking the main application
+        Thread(target=splash_screen).start()
+
 
 # if __name__ == "__main__":
 #     frame = Tk()
 #     app = AdminDashboard(frame)
 #     frame.mainloop()
+

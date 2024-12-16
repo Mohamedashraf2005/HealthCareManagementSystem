@@ -5,14 +5,14 @@ from welcome_page import WelcomePage
 from SignIN import LogIn
 from SignUP import SignUp
 from AdminDashboard import AdminDashboard
-
+from Doctor_Dpage import DoctorPage
+from patient_Dpage import PatientPage
 class MainApplication:
     def __init__(self, root):
         self.root = root
         self.root.geometry('1200x750+150+25')
         self.root.title('DocHub Application')
         self.root.resizable(False, False)
-        
         # Create container frame to hold all pages
         self.container = tk.Frame(root)
         self.container.pack(side="top", fill="both", expand=True)
@@ -23,8 +23,10 @@ class MainApplication:
         self.frames[LogIn] = LogIn(self.container, self)
         self.frames[SignUp] = SignUp(self.container, self)
         self.frames[AdminDashboard]= AdminDashboard(self.container, self)
+        self.frames[DoctorPage]= DoctorPage(self.container, self)
+        self.frames[PatientPage]= PatientPage(self.container, self)
         # Hena 3shan yStart B welcome page
-        self.show_frame(WelcomePage)
+        self.show_frame(AdminDashboard)
     
     def show_frame(self, cont):
         """Raise the specified frame to the top"""
