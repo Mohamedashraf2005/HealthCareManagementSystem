@@ -34,16 +34,21 @@ class SignUp:
 
 
     def logo_image(self):
-        """Add the logo at the top of the window."""
-        image = Image.open("logo.png").resize((110, 100))  # Resize the logo
-        image = ImageTk.PhotoImage(image)  # Convert image to Tkinter format
-        label = Label(self.frame, text="DOCHUB", compound="top", image=image, borderwidth=0,
-                      font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1",fg='#194C7C')
-        
-        label.image = image  # Keep a reference to the image
-        label.place(x=10, y=0)  # Position the label
+        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        datas = image.getdata()
+        new_data = []
+        for item in datas:
+            if item[0] > 200 and item[1] > 200 and item[2] > 200:
+                new_data.append((255, 255, 255, 0))
+            else:
+                new_data.append(item)
+        image.putdata(new_data)
+        image = ImageTk.PhotoImage(image)
+        label = Label(self.frame, text='DocHub', compound="top", image=image, borderwidth=0,
+                      font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1", fg='#194C7C')
+        label.image = image
+        label.place(x=0, y=0)
         return label
-
     def create_sign_in_frame(self):
         """Create the sign-in form with input fields and buttons."""
         f_sign_in = Frame(self.frame, width=600, height=500, bg='#B5B9F1')
@@ -107,7 +112,7 @@ class SignUp:
             return False
     def insert_patient(self, name, username, password, age, gender, phone):
         """Insert patient details into the database."""
-        conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\gui\HCMSclinic.db")
+        conn = sqlite3.connect(r"C:\Users\lOl\Documents\GitHub\HealthCareManagementSystem\database\HCMSclinic.db")
         cursor = conn.cursor()
 
         insert_query = """

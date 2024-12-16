@@ -5,12 +5,12 @@ from tkinter import ttk
 import sqlite3
 
 class AdminDashboard:
-    def __init__(self, root):
-        self.root = root
-        self.root.geometry("1200x750+150+25")
-        self.root.configure(bg="#B5B9F1")  
-        self.root.title("Admin Dashboard")
-        self.root.resizable(False, False)
+    def __init__(self, frame):
+        self.frame = frame
+        self.frame.geometry("1200x750+150+25")
+        self.frame.configure(bg="#B5B9F1")  
+        self.frame.title("Admin Dashboard")
+        self.frame.resizable(False, False)
 
         self.logo_image()
         self.add_logout_button()
@@ -19,15 +19,24 @@ class AdminDashboard:
         self.add_buttons_with_curves()
 
     def logo_image(self):
-        image = Image.open("logo.png").resize((150, 100))
+        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        datas = image.getdata()
+        new_data = []
+        for item in datas:
+            if item[0] > 200 and item[1] > 200 and item[2] > 200:
+                new_data.append((255, 255, 255, 0))
+            else:
+                new_data.append(item)
+        image.putdata(new_data)
         image = ImageTk.PhotoImage(image)
-        label = Label(self.root, text="DocHub", compound="top", image=image, borderwidth=0,
-                      font=("IM FELL Double Pica", 15, "bold"), bg="#B5B9F1")
-        label.image = image  # Prevent image deletion from memory
+        label = Label(self.frame, text='DocHub', compound="top", image=image, borderwidth=0,
+                      font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1", fg='#194C7C')
+        label.image = image
         label.place(x=0, y=0)
+        return label
 
     def add_logout_button(self):
-        f1 = Frame(self.root, width=1100, height=50, bg='#B5B9F1')
+        f1 = Frame(self.frame, width=1100, height=50, bg='#B5B9F1')
         f1.place(x=150, y=25)
         
         button1 = ctk.CTkButton(f1,text='Log Out', fg_color='#336EA6', text_color='white', border_width=2, border_color='#336EA6', corner_radius=20, hover_color='#B5B9F1')
@@ -35,11 +44,11 @@ class AdminDashboard:
 
 
     def add_welcome_message(self):
-        welcome_label = Label(self.root, text="Welcome, Admin..", font=("Arial", 18, "bold"), bg="#B5B9F1", fg="#fff")
-        welcome_label.place(x=530, y=30)
+        welcome_label = Label(self.frame, text="Welcome, Admin..", font=("Arial", 18, "bold"), bg="#B5B9F1", fg="#000")
+        welcome_label.place(x=500, y=30)
 
     def add_statistics_with_curves(self):
-        conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+        conn = sqlite3.connect(r"C:\Users\lOl\Documents\GitHub\HealthCareManagementSystem\database\HCMSclinic.db")
         ptpatient=conn.execute("""
                         SELECT MAX(id)
                         FROM patient;                       
@@ -58,9 +67,9 @@ class AdminDashboard:
             ("Balance", "78,000$"),
         ]
 
-        x_positions = [350, 550, 750]  
+        x_positions = [275, 530, 780]  
         for i, (text, value) in enumerate(stats):
-            self.create_rounded_frame(x_positions[i], 80, 150, 100, text, value)#y-axis,w-frame,h-frame,text-frame
+            self.create_rounded_frame(x_positions[i], 80, 150, 80, text, value)#y-axis,w-frame,h-frame,text-frame
 
     def add_buttons_with_curves(self):
         buttons = [
@@ -71,12 +80,12 @@ class AdminDashboard:
             ("Remove Doc", self.remove_doc),
         ]
 
-        x_positions = [230,390, 550, 710, 870] 
+        x_positions = [190,360, 530, 700, 870] 
         for i, (text, command) in enumerate(buttons):
-            self.create_rounded_button(x_positions[i], 185, 150, 50, text, command)
+            self.create_rounded_button(x_positions[i], 180, 150, 50, text, command)
 
     def create_rounded_frame(self, x, y, width, height, text, value):
-        canvas = Canvas(self.root, width=width, height=height, bg="#B5B9F1", highlightthickness=0)
+        canvas = Canvas(self.frame, width=width, height=height, bg="#B5B9F1", highlightthickness=0)
         canvas.place(x=x, y=y)
         radius = 20
         canvas.create_rectangle(
@@ -105,7 +114,7 @@ class AdminDashboard:
         )
 
     def create_rounded_button(self, x, y, width, height, text, command):
-        canvas = Canvas(self.root, width=width, height=height, bg="#B5B9F1", highlightthickness=0)
+        canvas = Canvas(self.frame, width=width, height=height, bg="#B5B9F1", highlightthickness=0)
         canvas.place(x=x, y=y)
         radius = 20
 
@@ -165,12 +174,12 @@ class AdminDashboard:
     
     def view_patient(self):
     # Clear any existing patient frames
-        for widget in self.root.winfo_children():
+        for widget in self.frame.winfo_children():
             if isinstance(widget, Frame) and widget.winfo_name() == "patient_frame":
                 widget.destroy()
                     # Create a frame for the text box
-        text_box_frame = Frame(self.root, bg="#f8f9fa")
-        text_box_frame.place(x=250, y=250, width=800, height=40)  # Adjust position and size as needed
+        text_box_frame = Frame(self.frame, bg="#f8f9fa")
+        text_box_frame.place(x=208, y=250, width=800, height=40)  # Adjust position and size as needed
 
         # Create a text box (Entry widget) to display patient info, centered and with no background
         patient_info_entry = Entry(
@@ -191,8 +200,8 @@ class AdminDashboard:
 
 
         # Create a modern frame for the patient data
-        patient_frame = Frame(self.root, name="patient_frame", bg="#f8f9fa", bd=0)
-        patient_frame.place(x=250, y=300, width=800, height=400)  # Adjust position and size as needed
+        patient_frame = Frame(self.frame, name="patient_frame", bg="#f8f9fa", bd=0)
+        patient_frame.place(x=208, y=300, width=800, height=400)  # Adjust position and size as needed
 
         # Create a canvas to hold the frame
         canvas = Canvas(patient_frame, bg="#f8f9fa", bd=0, highlightthickness=0)
@@ -219,7 +228,7 @@ class AdminDashboard:
         Label(header_framedoctor, text="Phone", bg="grey", fg="white", font=("Arial", 10, "bold"), width=15).pack(side=LEFT, padx=5, pady=5)
 
         # Add some sample patient data
-        connviewpateints = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+        connviewpateints = sqlite3.connect(r"C:\Users\lOl\Documents\GitHub\HealthCareManagementSystem\database\HCMSclinic.db")
         ptviewpatient=connviewpateints.execute("""
                         SELECT id,name,username,age,gender,phone
                         FROM patient;                       
@@ -263,11 +272,11 @@ class AdminDashboard:
 
     def view_doc(self):
     # Clear any existing doctor frames
-        for widget in self.root.winfo_children():
+        for widget in self.frame.winfo_children():
             if isinstance(widget, Frame) and widget.winfo_name() == "doctor_frame":
                 widget.destroy()
-            text_box_frame2 = Frame(self.root, bg="#f8f9fa")
-            text_box_frame2.place(x=250, y=250, width=800, height=40)  
+            text_box_frame2 = Frame(self.frame, bg="#f8f9fa")
+            text_box_frame2.place(x=208, y=250, width=800, height=40)  
 
             doctor_info_entry = Entry(
                 text_box_frame2,
@@ -286,8 +295,8 @@ class AdminDashboard:
 
 
         # Create a modern frame for the doctor data
-        doctor_frame = Frame(self.root, name="doctor_frame", bg="#f8f9fa", bd=0)
-        doctor_frame.place(x=250, y=300, width=800, height=400)
+        doctor_frame = Frame(self.frame, name="doctor_frame", bg="#f8f9fa", bd=0)
+        doctor_frame.place(x=208, y=300, width=800, height=400)
 
         # Create a canvas to hold the frame
         canvas = Canvas(doctor_frame, bg="#f8f9fa", bd=0, highlightthickness=0)
@@ -318,7 +327,7 @@ class AdminDashboard:
         Label(header_frame, text="Sessionfee", bg="grey", fg="white", font=("Arial", 10, "bold"), width=15).pack(side=LEFT, padx=5, pady=5)
 
         # Fetch doctor data
-        connviewdoc = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+        connviewdoc = sqlite3.connect(r"C:\Users\lOl\Documents\GitHub\HealthCareManagementSystem\database\HCMSclinic.db")
         ptviewdoc = connviewdoc.execute("""
                         SELECT id,name, username, age, gender, phone,SessionfeeEGP
                         FROM doctor;
@@ -368,6 +377,6 @@ class AdminDashboard:
 
 
 if __name__ == "__main__":
-    root = Tk()
-    app = AdminDashboard(root)
-    root.mainloop()
+    frame = Tk()
+    app = AdminDashboard(frame)
+    frame.mainloop()

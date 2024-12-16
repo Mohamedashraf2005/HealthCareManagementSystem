@@ -3,122 +3,139 @@ from tkinter import *
 from PIL import ImageTk, Image
 import sqlite3
 
+class PatientPage:
+    def __init__(self, frame):
+        self.frame = frame
+        self.frame.geometry('1200x750+150+25')
+        self.frame.title('Patient page')
+        self.frame.resizable(False, False)
+        self.frame.config(background='#B5B9F1')
+        self.frame.iconbitmap(r'C:\Users\lOl\Documents\GitHub\HealthCareManagementSystem\gui\PHOTO\logoIcon.ico')
 
-root = Tk()
-root.geometry('1200x750+150+25')
-root.title('Patient page')
-root.resizable(False, False)
-root.config(background='#B5B9F1')
-root.iconbitmap(r'D:\FAI\03SWE\Project\HCMS_Github\gui\PHOTO\logoIcon.ico')
+        self.logo_image()
+        self.create_frames()
+        self.create_widgets()
+        self.fetch_and_display_data()
 
-def logo_image():
-    image = Image.open(r"D:\FAI\03SWE\Project\HCMS_Github\gui\PHOTO\logo.png").resize((110, 100)).convert("RGBA")
-    datas = image.getdata()
-    new_data = []
-    for item in datas:
-        if item[0] > 200 and item[1] > 200 and item[2] > 200:
-            new_data.append((255, 255, 255, 0))
-        else:
-            new_data.append(item)
-    image.putdata(new_data)
-    image = ImageTk.PhotoImage(image)
-    label = Label(root, text='DOCHUB' ,compound="top", image=image, borderwidth=0,
-                  font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1",fg='#194C7C')
-    label.image = image
-    label.place(x=0, y=0)
-    return label
+    def logo_image(self):
+        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        datas = image.getdata()
+        new_data = []
+        for item in datas:
+            if item[0] > 200 and item[1] > 200 and item[2] > 200:
+                new_data.append((255, 255, 255, 0))
+            else:
+                new_data.append(item)
+        image.putdata(new_data)
+        image = ImageTk.PhotoImage(image)
+        label = Label(self.frame, text='DocHub', compound="top", image=image, borderwidth=0,
+                      font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1", fg='#194C7C')
+        label.image = image
+        label.place(x=0, y=0)
+        return label
 
-logo_img = logo_image()
-#frame of logout
-f1=Frame(width=1100,height=50,bg='#B5B9F1')
-f1.place(x=150,y=25)
+    def create_frames(self):
+        # Frame of logout
+        self.f1 = Frame(self.frame, width=1100, height=50, bg='#B5B9F1')
+        self.f1.place(x=150, y=25)
 
-button1=ctk.CTkButton(f1,text='Log Out',fg_color='#336EA6',text_color='white',border_width=2,border_color='#336EA6',corner_radius=20,hover_color='#B5B9F1')
-button1.place(x=850,y=12)
+        # Frame of welcome
+        self.f2 = Frame(self.frame, width=1200, height=60, bg='#B5B9F1')
+        self.f2.place(x=0, y=130)
 
-#frame of welcome
-f2=Frame(width=1200,height=60,bg='#B5B9F1')
-f2.place(x=0,y=130)
+        # Main frame of appointment request
+        self.f3 = ctk.CTkFrame(self.frame, width=745, height=350, corner_radius=20, fg_color='white')
+        self.f3.place(x=50, y=230)
 
-lab1=ctk.CTkLabel(f2,text='Welcome,############',text_color='black',font=('Adobe Garamond Pro',30,'bold'))
-lab1.place(x=400,y=0)
+        # Frame of patient info
+        self.f6 = ctk.CTkFrame(self.frame, width=300, height=210, corner_radius=20, fg_color='white')
+        self.f6.place(x=870, y=230)
 
+    def create_widgets(self):
+        # Logout button
+        self.logout_button = ctk.CTkButton(
+            self.f1, text='Log Out', fg_color='#336EA6', text_color='white',
+            border_width=2, border_color='#336EA6', corner_radius=20, hover_color='#B5B9F1'
+        )
+        self.logout_button.place(x=850, y=12)
 
-#main frame of appointment request
-f3=ctk.CTkFrame(root,width=745,height=350,corner_radius=20,fg_color='white')
-f3.place(x=50,y=230)
+        # Welcome label
+        self.welcome_label = ctk.CTkLabel(
+            self.f2, text='Welcome,############', text_color='black',
+            font=('Adobe Garamond Pro', 30, 'bold')
+        )
+        self.welcome_label.place(x=400, y=0)
 
-lab2=Label(f3,text='Appointment requests',fg='black',bg='white',font=("Felix Titling",18,'bold'))
-lab2.place(x=10,y=10)
+        # Appointment requests label
+        self.appointment_label = Label(
+            self.f3, text='Appointment requests', fg='black', bg='white',
+            font=("Felix Titling", 18, 'bold')
+        )
+        self.appointment_label.place(x=10, y=10)
 
-# Fetch data from the database
-conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
-ptpatientdasboard = conn.execute("""
-    SELECT name, specialization,SessionfeeEGP, availabilityone, availabilitytwo, rating
-    FROM doctor;
-""")
-data = ptpatientdasboard.fetchall()
-conn.close()
+        # Scrollable frame for appointments
+        self.f5 = ctk.CTkScrollableFrame(self.f3, width=710, height=260, corner_radius=10)
+        self.f5.place(x=5, y=55)
 
-f5 = ctk.CTkScrollableFrame(f3, width=710, height=260, corner_radius=10)
-f5.place(x=5, y=55)
+        # Patient info labels
+        self.info_label = ctk.CTkLabel(self.f6, text='Patient INFO', text_color='black', font=('Felix Titling', 20))
+        self.info_label.place(x=70, y=20)
 
-# New columns to be used for the header
-columns = ["Name", "Category", "Fee", "Time 1", "Time 2", "Rating"]
+        self.name_label = ctk.CTkLabel(self.f6, text='Name :', text_color='black', font=('Felix Titling', 20))
+        self.name_label.place(x=15, y=60)
 
-# Create the new column headers
-for col_index, col_name in enumerate(columns):
-    ctk.CTkLabel(f5, text=col_name, font=('Arial', 14, 'bold'), text_color='black').grid(row=0, column=col_index, padx=5, pady=2)
+        self.age_label = ctk.CTkLabel(self.f6, text='Age :', text_color='black', font=('Felix Titling', 20))
+        self.age_label.place(x=15, y=100)
 
-# Fetch data from the database
-conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
-ptpatientdasboard = conn.execute("""
-    SELECT name, specialization, SessionfeeEGP, availabilityone, availabilitytwo, rating
-    FROM doctor;
-""")
-data = ptpatientdasboard.fetchall()
-conn.close()
+        self.gender_label = ctk.CTkLabel(self.f6, text='Gender :', text_color='black', font=('Felix Titling', 20))
+        self.gender_label.place(x=15, y=140)
 
-# Populate the data dynamically under the new columns
-for row_index, row in enumerate(data, start=1):  # start=1 to leave the first row for headers
-    for col_index, value in enumerate(row):
-        ctk.CTkLabel(f5, text=str(value), font=('arial', 12), text_color='black').grid(row=row_index, column=col_index, padx=5, pady=2)
+        self.booked_label = ctk.CTkLabel(self.f6, text='Booked :', text_color='black', font=('Felix Titling', 20))
+        self.booked_label.place(x=15, y=180)
 
-    # Create a unique StringVar for each row's radio buttons
-    radio_vars=[]
-    radio_var = ctk.StringVar(value='other')
-    radio_vars.append(radio_var)  # Store it to prevent garbage collection
-    
-    # Add radio buttons for "Yes" and "No"
-    ctk.CTkRadioButton(f5, text='Yes', value='yes', variable=radio_var, fg_color='green', hover_color='green').grid(row=row_index, column=len(columns), padx=2, pady=2)
-    ctk.CTkRadioButton(f5, text='No', value='no', variable=radio_var, fg_color='red', hover_color='red').grid(row=row_index, column=len(columns) + 1, padx=2, pady=2) 
+        # Patient image
+        self.img = Image.open(r'C:\Users\lOl\Documents\GitHub\HealthCareManagementSystem\gui\PHOTO\fepatient.png').resize((300, 300))
+        self.img = ImageTk.PhotoImage(self.img)
+        self.img_label = Label(self.frame, image=self.img, bg='#B5B9F1')
+        self.img_label.place(x=870, y=440)
 
+        # Confirmation button
+        self.confirm_button = ctk.CTkButton(
+            self.frame, text='Confirmation', text_color='white', fg_color='#7579B9',
+            corner_radius=20, hover_color='#B5B9F1', font=('arial', 20),
+            border_width=2, border_color='#7579B9'
+        )
+        self.confirm_button.place(x=350, y=600)
 
-#frame of patient info  
-f6=ctk.CTkFrame(root,width=300,height=210,corner_radius=20,fg_color='white')
-f6.place(x=870,y=230)
-#patient info
-info_lab=ctk.CTkLabel(f6,text='Patient INFO ',text_color='black',font=('Felix Titling',20))
-info_lab.place(x=70,y=20)
-#patient name
-name_lab=ctk.CTkLabel(f6,text='Name :',text_color='black',font=('Felix Titling',20))
-name_lab.place(x=15,y=60)
-#patient age
-age_lab=ctk.CTkLabel(f6,text='Age :',text_color='black',font=('Felix Titling',20))
-age_lab.place(x=15,y=100)
-#patient gender
-gender_lab=ctk.CTkLabel(f6,text='Gender :',text_color='black',font=('Felix Titling',20))
-gender_lab.place(x=15,y=140)
-#patient book label
-book_lab=ctk.CTkLabel(f6,text='Booked :',text_color='black',font=('Felix Titling',20))
-book_lab.place(x=15,y=180)
-#image 
-img=Image.open(r'D:\FAI\03SWE\Project\HCMS_Github\gui\PHOTO\fepatient.png').resize((300,300))
-img = ImageTk.PhotoImage(img)
-img_label = Label(root, image=img, bg='#B5B9F1')  
-img_label.place(x=870,y=440)
+    def fetch_and_display_data(self):
+        # Fetch data from database
+        conn = sqlite3.connect(r"C:\Users\lOl\Documents\GitHub\HealthCareManagementSystem\database\HCMSclinic.db")
+        cursor = conn.execute("""
+            SELECT name, specialization, SessionfeeEGP, availabilityone, availabilitytwo, rating
+            FROM doctor;
+        """)
+        data = cursor.fetchall()
+        conn.close()
 
-#confirm buuton
-confirm_button=ctk.CTkButton(root,text='Confirmation',text_color='white',fg_color='#7579B9',corner_radius=20,hover_color='#B5B9F1',font=('arial',20),border_width=2,border_color='#7579B9')
-confirm_button.place(x=350,y=600)
-root.mainloop()
+        # Columns headers
+        columns = ["Name", "Category", "Fee", "Time 1", "Time 2", "Rating"]
+
+        # Create headers
+        for col_index, col_name in enumerate(columns):
+            ctk.CTkLabel(self.f5, text=col_name, font=('Arial', 14, 'bold'), text_color='black').grid(row=0, column=col_index, padx=5, pady=2)
+
+        # Populate data
+        for row_index, row in enumerate(data, start=1):
+            for col_index, value in enumerate(row):
+                ctk.CTkLabel(self.f5, text=str(value), font=('arial', 12), text_color='black').grid(row=row_index, column=col_index, padx=5, pady=2)
+
+            # Radio buttons
+            radio_var = ctk.StringVar(value='other')
+            ctk.CTkRadioButton(self.f5, text='Yes', value='yes', variable=radio_var, fg_color='green', hover_color='green').grid(row=row_index, column=len(columns), padx=2, pady=2)
+            ctk.CTkRadioButton(self.f5, text='No', value='no', variable=radio_var, fg_color='red', hover_color='red').grid(row=row_index, column=len(columns) + 1, padx=2, pady=2)
+
+# Run the application
+if __name__ == "__main__":
+    frame = Tk()
+    app = PatientPage(frame)
+    frame.mainloop()

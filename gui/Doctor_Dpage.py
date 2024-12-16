@@ -28,7 +28,7 @@ class PatientPage:
         label = Label(self.frame, text='DocHub', compound="top", image=image, borderwidth=0,
                       font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1", fg='#194C7C')
         label.image = image
-        label.place(x=0, y=0)
+        label.place(x=-6, y=0)
         return label
 
     def create_frames(self):

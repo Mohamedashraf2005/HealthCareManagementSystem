@@ -24,16 +24,22 @@ class LogIn:
         self.logo_image()
         self.create_buttons()
         self.create_login_form()
-        self.create_back_button()
 
     def logo_image(self):
-        """Add the logo at the top"""
-        image = Image.open("logo.png").resize((110, 100))
+        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        datas = image.getdata()
+        new_data = []
+        for item in datas:
+            if item[0] > 200 and item[1] > 200 and item[2] > 200:
+                new_data.append((255, 255, 255, 0))
+            else:
+                new_data.append(item)
+        image.putdata(new_data)
         image = ImageTk.PhotoImage(image)
-        label = Label(self.frame, text="DocHub", compound="top", image=image, borderwidth=0,
-                      font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1",fg='#194C7C')
-        label.image = image  # Prevent image deletion from memory
-        label.place(x=10, y=0)
+        label = Label(self.frame, text='DocHub', compound="top", image=image, borderwidth=0,
+                      font=("IM FELL Double Pica", 13, "bold"), bg="#B5B9F1", fg='#194C7C')
+        label.image = image
+        label.place(x=0, y=0)
         return label
 
     def show_login(self, title):
@@ -104,12 +110,6 @@ class LogIn:
                                       bg="#8A8EBF", fg="white", width=10, 
                                       command=self.sign_up)
 
-    def create_back_button(self):
-        """Create the back button"""
-        btn1 = Button(self.frame, text="<back", font=("IM FELL Double Pica", 15, "bold"),
-                      fg="SteelBlue", bg="#B5B9F1", borderwidth=0,
-                      command=lambda: self.app.show_frame('WelcomePage'))
-        btn1.place(x=1125, y=10)
 
     def validate_account_selection(self):
         """Ensure the user has selected an account type before interacting with fields or clicking Login"""
