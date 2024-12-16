@@ -89,4 +89,43 @@ if __name__ == "__main__":
     else:
         print("password wrong")
 
+#####################
+def check_usernameD(username):
+    conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM doctor WHERE username = ?", (username,))
+    result = cursor.fetchone()
+    conn.close()
+    if result:
+        return True
+    else:
+        return False
+def check_passwordD(username, password):
+    conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM doctor WHERE username = ? AND password = ?", (username, password))
+    result = cursor.fetchone()
+    conn.close()
+    if result:
+        return True
+    else:
+        return False
 
+def usernametodahboarf(usernameget):
+    conn = sqlite3.connect('HCMSclinic.db')  
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT * FROM patient WHERE username = ?", (usernameget,))
+        result = cursor.fetchone()
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        result = None
+    finally:
+        conn.close()
+    return result
+usernameget = 'youssef1790'
+user_data = usernametodahboarf(usernameget)
+#if user_data:
+#    print(f"patient data: {user_data}")
+#else:
+#   print("patient does not exist")

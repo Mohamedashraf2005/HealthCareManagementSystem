@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 from welcome_page import WelcomePage
 from SignIN import LogIn
 from SignUP import SignUp
+from AdminDashboard import AdminDashboard
 
 class MainApplication:
     def __init__(self, root):
@@ -21,7 +22,7 @@ class MainApplication:
         self.frames[WelcomePage] = WelcomePage(self.container, self)
         self.frames[LogIn] = LogIn(self.container, self)
         self.frames[SignUp] = SignUp(self.container, self)
-        
+        self.frames[AdminDashboard]= AdminDashboard(self.container, self)
         # Hena 3shan yStart B welcome page
         self.show_frame(WelcomePage)
     

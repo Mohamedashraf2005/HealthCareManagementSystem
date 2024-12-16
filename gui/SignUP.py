@@ -107,7 +107,7 @@ class SignUp:
             return False
     def insert_patient(self, name, username, password, age, gender, phone):
         """Insert patient details into the database."""
-        conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\gui\HCMSclinic.db")
+        conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
         cursor = conn.cursor()
 
         insert_query = """
@@ -115,7 +115,7 @@ class SignUp:
         VALUES (?, ?, ?, ?, ?, ?)
         """
         try:
-            cursor.execute(insert_query, (name, username, password, int(age), gender, phone))
+            cursor.execute(insert_query, (name, username, password, (age), gender, phone))
             conn.commit()
             messagebox.showinfo("Success", "Registration Successful!")
         except sqlite3.IntegrityError:

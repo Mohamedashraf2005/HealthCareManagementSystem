@@ -1,17 +1,20 @@
 from tkinter import *
+from tkinter import Label, Button, Entry, Frame, DISABLED, NORMAL
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from tkinter import ttk
 import sqlite3
 
 class AdminDashboard:
-    def __init__(self, root):
-        self.root = root
-        self.root.geometry("1200x750+150+25")
-        self.root.configure(bg="#B5B9F1")  
-        self.root.title("Admin Dashboard")
-        self.root.resizable(False, False)
+    def __init__(self, container, app):
 
+        self.frame = Frame(container, width=1200, height=750, bg="#B5B9F1")
+        self.frame.grid(row=0, column=0, sticky="nsew")
+        # self.frame.title("Admin Dashboard")
+        # self.frame.resizable(False, False)
+        ###
+        self.app = app
+        ###
         self.logo_image()
         self.add_logout_button()
         self.add_welcome_message()
@@ -21,13 +24,13 @@ class AdminDashboard:
     def logo_image(self):
         image = Image.open("logo.png").resize((150, 100))
         image = ImageTk.PhotoImage(image)
-        label = Label(self.root, text="DocHub", compound="top", image=image, borderwidth=0,
+        label = Label(self.frame, text="DocHub", compound="top", image=image, borderwidth=0,
                       font=("IM FELL Double Pica", 15, "bold"), bg="#B5B9F1")
         label.image = image  # Prevent image deletion from memory
         label.place(x=0, y=0)
 
     def add_logout_button(self):
-        f1 = Frame(self.root, width=1100, height=50, bg='#B5B9F1')
+        f1 = Frame(self.frame, width=1100, height=50, bg='#B5B9F1')
         f1.place(x=150, y=25)
         
         button1 = ctk.CTkButton(f1,text='Log Out', fg_color='#336EA6', text_color='white', border_width=2, border_color='#336EA6', corner_radius=20, hover_color='#B5B9F1')
@@ -35,7 +38,7 @@ class AdminDashboard:
 
 
     def add_welcome_message(self):
-        welcome_label = Label(self.root, text="Welcome, Admin..", font=("Arial", 18, "bold"), bg="#B5B9F1", fg="#fff")
+        welcome_label = Label(self.frame, text="Welcome, Admin..", font=("Arial", 18, "bold"), bg="#B5B9F1", fg="#fff")
         welcome_label.place(x=530, y=30)
 
     def add_statistics_with_curves(self):
@@ -76,7 +79,7 @@ class AdminDashboard:
             self.create_rounded_button(x_positions[i], 185, 150, 50, text, command)
 
     def create_rounded_frame(self, x, y, width, height, text, value):
-        canvas = Canvas(self.root, width=width, height=height, bg="#B5B9F1", highlightthickness=0)
+        canvas = Canvas(self.frame, width=width, height=height, bg="#B5B9F1", highlightthickness=0)
         canvas.place(x=x, y=y)
         radius = 20
         canvas.create_rectangle(
@@ -105,7 +108,7 @@ class AdminDashboard:
         )
 
     def create_rounded_button(self, x, y, width, height, text, command):
-        canvas = Canvas(self.root, width=width, height=height, bg="#B5B9F1", highlightthickness=0)
+        canvas = Canvas(self.frame, width=width, height=height, bg="#B5B9F1", highlightthickness=0)
         canvas.place(x=x, y=y)
         radius = 20
 
@@ -165,11 +168,11 @@ class AdminDashboard:
     
     def view_patient(self):
     # Clear any existing patient frames
-        for widget in self.root.winfo_children():
+        for widget in self.frame.winfo_children():
             if isinstance(widget, Frame) and widget.winfo_name() == "patient_frame":
                 widget.destroy()
                     # Create a frame for the text box
-        text_box_frame = Frame(self.root, bg="#f8f9fa")
+        text_box_frame = Frame(self.frame, bg="#f8f9fa")
         text_box_frame.place(x=250, y=250, width=800, height=40)  # Adjust position and size as needed
 
         # Create a text box (Entry widget) to display patient info, centered and with no background
@@ -191,7 +194,7 @@ class AdminDashboard:
 
 
         # Create a modern frame for the patient data
-        patient_frame = Frame(self.root, name="patient_frame", bg="#f8f9fa", bd=0)
+        patient_frame = Frame(self.frame, name="patient_frame", bg="#f8f9fa", bd=0)
         patient_frame.place(x=250, y=300, width=800, height=400)  # Adjust position and size as needed
 
         # Create a canvas to hold the frame
@@ -263,10 +266,10 @@ class AdminDashboard:
 
     def view_doc(self):
     # Clear any existing doctor frames
-        for widget in self.root.winfo_children():
+        for widget in self.frame.winfo_children():
             if isinstance(widget, Frame) and widget.winfo_name() == "doctor_frame":
                 widget.destroy()
-            text_box_frame2 = Frame(self.root, bg="#f8f9fa")
+            text_box_frame2 = Frame(self.frame, bg="#f8f9fa")
             text_box_frame2.place(x=250, y=250, width=800, height=40)  
 
             doctor_info_entry = Entry(
@@ -286,7 +289,7 @@ class AdminDashboard:
 
 
         # Create a modern frame for the doctor data
-        doctor_frame = Frame(self.root, name="doctor_frame", bg="#f8f9fa", bd=0)
+        doctor_frame = Frame(self.frame, name="doctor_frame", bg="#f8f9fa", bd=0)
         doctor_frame.place(x=250, y=300, width=800, height=400)
 
         # Create a canvas to hold the frame
@@ -367,7 +370,7 @@ class AdminDashboard:
         print("Remove Doc clicked")
 
 
-if __name__ == "__main__":
-    root = Tk()
-    app = AdminDashboard(root)
-    root.mainloop()
+# if __name__ == "__main__":
+#     frame = Tk()
+#     app = AdminDashboard(frame)
+#     frame.mainloop()
