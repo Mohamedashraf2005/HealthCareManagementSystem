@@ -4,8 +4,14 @@ from SignUP import SignUp
 from AdminDashboard import AdminDashboard
 from Doctor_Dpage import DoctorPage
 from patient_Dpage import PatientPage
-import sqlite3
 import dbfunctions as dbf
+import os
+import sqlite3
+
+#if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
+db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
+
+
 class LogIn:
     def __init__(self, container, app):
         """Initialize the login page frame and setup all UI components."""

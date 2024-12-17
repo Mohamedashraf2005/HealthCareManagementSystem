@@ -1,7 +1,11 @@
 import customtkinter as ctk
 from tkinter import *
 from PIL import ImageTk, Image
+import os
 import sqlite3
+
+#if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
+db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
 
 class PatientPage:
     def __init__(self, container, app):
@@ -97,7 +101,7 @@ class PatientPage:
         self.booked_label.place(x=15, y=180)
 
         # Patient image
-        self.img = Image.open(r'D:\FAI\03SWE\Project\HCMS_Github\gui\PHOTO\fepatient.png').resize((300, 300))
+        self.img = Image.open(r"C:\Users\Anas\OneDrive\Desktop\HCMS\gui\PHOTO\fepatient.png").resize((300, 300))
         self.img = ImageTk.PhotoImage(self.img)
         self.img_label = Label(self.frame, image=self.img, bg='#B5B9F1')
         self.img_label.place(x=870, y=440)
@@ -112,7 +116,7 @@ class PatientPage:
 
     def fetch_and_display_data(self):
         # Fetch data from database
-        conn = sqlite3.connect(r"HCMSclinic.db")
+        conn = sqlite3.connect(db_path)
         cursor = conn.execute("""
             SELECT name, specialization, SessionfeeEGP, availabilityone, availabilitytwo, rating
             FROM doctor;

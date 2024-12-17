@@ -1,18 +1,16 @@
+import os
+import sqlite3
+
+#if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
+db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
+
 #Ashraf-check if Name is valid in table database
 def checkname(name):
     for i in name: 
         if not (i.isalpha() or i.isspace()):
             return False
     return True 
-# Anas Mohamed - check if the age is valid integer not a string 
-## first way ##
-# def input_age(age):
-#     if not age.isdigit():  
-#         print("Invalid input")  
-#         return None  
-#     else:
-#         return int(age)  
-## second way ##
+
 def input_age(age):
     try:
         age = int(age)  
@@ -33,9 +31,8 @@ def check_gender (gender):
         return None
 #eman mohamed creat 2 fanctions : 1=>check for username
 #                                 2=>check for password
-import sqlite3
 def create_database():
-    conn = sqlite3.connect("HCMSclinic.db")
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS patient (
@@ -48,7 +45,7 @@ def create_database():
     conn.close()
 def add_patient(username, password):
     try:
-        conn = sqlite3.connect("HCMSclinic.db")
+        conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         cursor.execute("INSERT INTO patient (username, password) VALUES (?, ?)", (username, password))
         conn.commit()
@@ -57,7 +54,7 @@ def add_patient(username, password):
     finally:
         conn.close()
 def check_username(username):
-    conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM patient WHERE username = ?", (username,))
     result = cursor.fetchone()
@@ -67,7 +64,7 @@ def check_username(username):
     else:
         return False
 def check_password(username, password):
-    conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM patient WHERE username = ? AND password = ?", (username, password))
     result = cursor.fetchone()
@@ -91,7 +88,7 @@ if __name__ == "__main__":
 
 #####################
 def check_usernameD(username):
-    conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM doctor WHERE username = ?", (username,))
     result = cursor.fetchone()
@@ -101,7 +98,7 @@ def check_usernameD(username):
     else:
         return False
 def check_passwordD(username, password):
-    conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM doctor WHERE username = ? AND password = ?", (username, password))
     result = cursor.fetchone()
@@ -112,7 +109,7 @@ def check_passwordD(username, password):
         return False
 
 def usernametodahboarf(usernameget):
-    conn = sqlite3.connect('HCMSclinic.db')  
+    conn = sqlite3.connect(db_path)  
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT * FROM patient WHERE username = ?", (usernameget,))

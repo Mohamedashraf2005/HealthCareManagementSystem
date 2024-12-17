@@ -1,6 +1,12 @@
 import customtkinter as ctk
 from tkinter import *
 from PIL import ImageTk, Image
+import os
+import sqlite3
+
+#if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
+db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
+
 
 class DoctorPage:
     def __init__(self, container, app):

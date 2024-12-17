@@ -1,8 +1,13 @@
-import sqlite3
 from tkinter import messagebox
 import customtkinter as ctk
 from tkinter import *
 from PIL import ImageTk, Image
+import os
+import sqlite3
+
+#if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
+db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
+
 
 # from database.patientslogin import checkname
 
@@ -112,7 +117,7 @@ class SignUp:
             return False
     def insert_patient(self, name, username, password, age, gender, phone):
         """Insert patient details into the database."""
-        conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+        conn = sqlite3.connect(db_path)
 
         cursor = conn.cursor()
 
