@@ -148,6 +148,7 @@ class LogIn:
                                       command=self.attempt_loginD)
 
 
+
     def validate_account_selection(self):
         """Ensure the user has selected an account type before interacting with fields or clicking Login"""
         if self.login_title.cget("text") == "Login":
@@ -160,6 +161,8 @@ class LogIn:
         if self.validate_account_selection():
             # Add the code here for login verification
             if dbf.check_username(self.username_entry.get()) and dbf.check_password(self.username_entry.get(),self.password_entry.get()):
+                user_data = dbf.usernametodahboarf(self.username_entry.get())
+                print(f"DEBUG HERE!####################User data returned: {user_data}#########")
                 self.app.show_frame(PatientPage)
             else:
                 self.error_message.config(text="Wrong username or Password,Try Again!")  # Hide the error message if login is successful

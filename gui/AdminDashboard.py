@@ -10,7 +10,6 @@ from threading import Thread
 class AdminDashboard:
     def __init__(self, container, app):
 
-
         self.frame = Frame(container, width=1200, height=750, bg="#B5B9F1")
         self.frame.grid(row=0, column=0, sticky="nsew")
         # self.frame.title("Admin Dashboard")
@@ -24,10 +23,6 @@ class AdminDashboard:
         self.add_welcome_message()
         self.add_statistics_with_curves()
         self.add_buttons_with_curves()
-
-   
-
-
 
     def logo_image(self):   
         image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
@@ -259,7 +254,7 @@ class AdminDashboard:
         Label(header_framedoctor, text="Phone", bg="grey", fg="white", font=("Arial", 10, "bold"), width=15).pack(side=LEFT, padx=5, pady=5)
 
         # Add some sample patient data
-        connviewpateints = sqlite3.connect(r"C:\Users\lOl\Documents\GitHub\HealthCareManagementSystem\database\HCMSclinic.db")
+        connviewpateints = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
         ptviewpatient=connviewpateints.execute("""
                         SELECT id,name,username,age,gender,phone
                         FROM patient;                       
@@ -361,7 +356,7 @@ class AdminDashboard:
         Label(header_frame, text="Sessionfee", bg="grey", fg="white", font=("Arial", 10, "bold"), width=15).pack(side=LEFT, padx=5, pady=5)
 
         # Fetch doctor data
-        connviewdoc = sqlite3.connect(r"C:\Users\lOl\Documents\GitHub\HealthCareManagementSystem\database\HCMSclinic.db")
+        connviewdoc = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
         ptviewdoc = connviewdoc.execute("""
                         SELECT id,name, username, age, gender, phone,SessionfeeEGP
                         FROM doctor;

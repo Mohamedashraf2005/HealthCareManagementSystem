@@ -111,6 +111,7 @@ def check_passwordD(username, password):
     else:
         return False
 
+
 def usernametodahboarf(usernameget):
     conn = sqlite3.connect('HCMSclinic.db')  
     cursor = conn.cursor()
@@ -122,10 +123,12 @@ def usernametodahboarf(usernameget):
         result = None
     finally:
         conn.close()
-    return result
-usernameget = 'youssef1790'
-user_data = usernametodahboarf(usernameget)
+    return result[2]
+
+# usernameget = 'youssef1790'
+# user_data = usernametodahboarf(usernameget)
 #if user_data:
 #    print(f"patient data: {user_data}")
 #else:
 #   print("patient does not exist")
+

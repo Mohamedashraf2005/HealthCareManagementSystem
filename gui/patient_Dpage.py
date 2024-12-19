@@ -2,7 +2,8 @@ import customtkinter as ctk
 from tkinter import *
 from PIL import ImageTk, Image
 import sqlite3
-
+import dbfunctions as dbf
+# from SignIN import user_data
 class PatientPage:
     def __init__(self, container, app):
         # self.frame = frame
@@ -84,7 +85,7 @@ class PatientPage:
         self.info_label = ctk.CTkLabel(self.f6, text='Patient INFO', text_color='black', font=('Felix Titling', 20))
         self.info_label.place(x=70, y=20)
 
-        self.name_label = ctk.CTkLabel(self.f6, text='Name :', text_color='black', font=('Felix Titling', 20))
+        self.name_label = ctk.CTkLabel(self.f6, text=f'Name :', text_color='black', font=('Felix Titling', 20))
         self.name_label.place(x=15, y=60)
 
         self.age_label = ctk.CTkLabel(self.f6, text='Age :', text_color='black', font=('Felix Titling', 20))
