@@ -3,7 +3,11 @@ from tkinter import *
 from PIL import ImageTk, Image
 from SignIN import LogIn
 from SignUP import SignUp
+import os
 
+def get_resource_path(*path_parts):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        return os.path.join(current_dir, *path_parts)
 class WelcomePage:
     def __init__(self, container, app):
         self.frame = Frame(container, width=1200, height=750, bg='#B5B9F1')
@@ -22,8 +26,12 @@ class WelcomePage:
         self.logo_image()
         self.create_widgets()
 
+   
+
+
+
     def logo_image(self):
-        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        image = Image.open(get_resource_path("PHOTO", "logo.png")).resize((110, 100)).convert("RGBA")
         datas = image.getdata()
         new_data = []
         for item in datas:
@@ -103,11 +111,13 @@ class WelcomePage:
         self.display_image(f4) 
 
     def display_image(self, frame):
-        img = Image.open("welcome.png").resize((465, 500)) 
+        img = Image.open(get_resource_path("PHOTO", "welcome.png")).resize((465, 500))
         img = ImageTk.PhotoImage(img) 
         img_label = Label(frame, image=img, bg='#B5B9F1') 
         img_label.image = img  
         img_label.pack()
+
+
 
 # Commented out the main block as this will now be used in a multi-page application
 # If you want to test it standalone, you can uncomment and modify:

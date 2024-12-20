@@ -2,8 +2,8 @@ import tkinter as tk
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from welcome_page import WelcomePage
-from SignIN import LogIn
 from SignUP import SignUp
+from SignIN import LogIn
 from AdminDashboard import AdminDashboard
 from Doctor_Dpage import DoctorPage
 from patient_Dpage import PatientPage
@@ -26,7 +26,9 @@ class MainApplication:
         self.frames[DoctorPage]= DoctorPage(self.container, self)
         self.frames[PatientPage]= PatientPage(self.container, self)
         # Hena 3shan yStart B welcome page
-        self.show_frame(WelcomePage) 
+
+        self.show_frame(WelcomePage)
+
     
     def show_frame(self, cont):
         """Raise the specified frame to the top"""

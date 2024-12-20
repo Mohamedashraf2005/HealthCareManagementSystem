@@ -1,6 +1,15 @@
 import customtkinter as ctk
 from tkinter import *
 from PIL import ImageTk, Image
+import os
+import sqlite3
+
+#if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
+db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
+
+def get_resource_path(*path_parts):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        return os.path.join(current_dir, *path_parts)
 
 class DoctorPage:
     def __init__(self, container, app):
@@ -18,7 +27,7 @@ class DoctorPage:
         self.create_widgets()
 
     def logo_image(self):
-        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        image = Image.open(get_resource_path("PHOTO", "logo.png")).resize((110, 100)).convert("RGBA")
         datas = image.getdata()
         new_data = []
         for item in datas:

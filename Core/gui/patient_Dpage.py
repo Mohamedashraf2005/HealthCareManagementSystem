@@ -1,9 +1,20 @@
 import customtkinter as ctk
 from tkinter import *
 from PIL import ImageTk, Image
+import os
 import sqlite3
 import dbfunctions as dbf
 # from SignIN import user_data
+
+
+#if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
+db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
+
+def get_resource_path(*path_parts):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        return os.path.join(current_dir, *path_parts)
+
+pateintusername=dbf.RecieverFile()
 class PatientPage:
     def __init__(self, container, app):
         # self.frame = frame
@@ -22,7 +33,7 @@ class PatientPage:
         self.fetch_and_display_data()
 
     def logo_image(self):
-        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        image = Image.open(get_resource_path("PHOTO", "logo.png")).resize((110, 100)).convert("RGBA")
         datas = image.getdata()
         new_data = []
         for item in datas:
@@ -54,7 +65,7 @@ class PatientPage:
         # Frame of patient info
         self.f6 = ctk.CTkFrame(self.frame, width=300, height=210, corner_radius=20, fg_color='white')
         self.f6.place(x=870, y=230)
-
+    
     def create_widgets(self):
         # Logout button
         self.logout_button = ctk.CTkButton(
@@ -98,7 +109,8 @@ class PatientPage:
         self.booked_label.place(x=15, y=180)
 
         # Patient image
-        self.img = Image.open(r'D:\FAI\03SWE\Project\HCMS_Github\gui\PHOTO\fepatient.png').resize((300, 300))
+        
+        self.img = Image.open(get_resource_path("PHOTO", "fepatient.png")).resize((300, 300))
         self.img = ImageTk.PhotoImage(self.img)
         self.img_label = Label(self.frame, image=self.img, bg='#B5B9F1')
         self.img_label.place(x=870, y=440)
@@ -113,7 +125,7 @@ class PatientPage:
 
     def fetch_and_display_data(self):
         # Fetch data from database
-        conn = sqlite3.connect(r"HCMSclinic.db")
+        conn = sqlite3.connect(db_path)
         cursor = conn.execute("""
             SELECT name, specialization, SessionfeeEGP, availabilityone, availabilitytwo, rating
             FROM doctor;

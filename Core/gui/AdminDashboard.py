@@ -3,10 +3,17 @@ from tkinter import Label, Button, Entry, Frame, DISABLED, NORMAL
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from tkinter import ttk
+import os
 import sqlite3
 import time
 from threading import Thread
 
+#if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
+db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
+
+def get_resource_path(*path_parts):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        return os.path.join(current_dir, *path_parts)
 class AdminDashboard:
     def __init__(self, container, app):
 
@@ -25,7 +32,7 @@ class AdminDashboard:
         self.add_buttons_with_curves()
 
     def logo_image(self):   
-        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        image = Image.open(get_resource_path("PHOTO", "logo.png")).resize((110, 100)).convert("RGBA")
         datas = image.getdata()
         new_data = []
         for item in datas:
@@ -70,7 +77,7 @@ class AdminDashboard:
 
 
     def add_statistics_with_curves(self):
-        conn = sqlite3.connect("HCMSclinic.db")
+        conn = sqlite3.connect(db_path)
         ptpatient=conn.execute("""
                         SELECT MAX(id)
                         FROM patient;                       
@@ -254,7 +261,9 @@ class AdminDashboard:
         Label(header_framedoctor, text="Phone", bg="grey", fg="white", font=("Arial", 10, "bold"), width=15).pack(side=LEFT, padx=5, pady=5)
 
         # Add some sample patient data
-        connviewpateints = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+
+
+        connviewpateints = sqlite3.connect(db_path)
         ptviewpatient=connviewpateints.execute("""
                         SELECT id,name,username,age,gender,phone
                         FROM patient;                       
@@ -356,7 +365,9 @@ class AdminDashboard:
         Label(header_frame, text="Sessionfee", bg="grey", fg="white", font=("Arial", 10, "bold"), width=15).pack(side=LEFT, padx=5, pady=5)
 
         # Fetch doctor data
-        connviewdoc = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+
+        connviewdoc = sqlite3.connect(db_path)
+
         ptviewdoc = connviewdoc.execute("""
                         SELECT id,name, username, age, gender, phone,SessionfeeEGP
                         FROM doctor;

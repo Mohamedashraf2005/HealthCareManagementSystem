@@ -1,9 +1,16 @@
-import sqlite3
 from tkinter import messagebox
 import customtkinter as ctk
 from tkinter import *
 from PIL import ImageTk, Image
+import os
+import sqlite3
 
+#if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
+db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
+
+def get_resource_path(*path_parts):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        return os.path.join(current_dir, *path_parts)
 # from database.patientslogin import checkname
 
 
@@ -34,7 +41,7 @@ class SignUp:
 
 
     def logo_image(self):
-        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        image = Image.open(get_resource_path("PHOTO", "logo.png")).resize((110, 100)).convert("RGBA")
         datas = image.getdata()
         new_data = []
         for item in datas:
@@ -112,7 +119,7 @@ class SignUp:
             return False
     def insert_patient(self, name, username, password, age, gender, phone):
         """Insert patient details into the database."""
-        conn = sqlite3.connect(r"D:\FAI\03SWE\Project\HCMS_Github\database\HCMSclinic.db")
+        conn = sqlite3.connect(db_path)
 
         cursor = conn.cursor()
 
@@ -162,8 +169,8 @@ class SignUp:
         """Create the frame that holds the image on the right side."""
         f4 = Frame(self.frame, width=500, height=400, bg='black') 
         f4.place(x=700, y=180)
-        
-        img = Image.open("Doctor.png").resize((500, 400))
+       
+        img = Image.open(get_resource_path("PHOTO", "Doctor.png")).resize((500, 400))
         img = ImageTk.PhotoImage(img)
         img_label = Label(f4, image=img, bg='#B5B9F1')  
         img_label.place(x=0, y=0)

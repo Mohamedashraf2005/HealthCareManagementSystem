@@ -4,8 +4,17 @@ from SignUP import SignUp
 from AdminDashboard import AdminDashboard
 from Doctor_Dpage import DoctorPage
 from patient_Dpage import PatientPage
-import sqlite3
 import dbfunctions as dbf
+import os
+import sqlite3
+
+#if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
+db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
+
+def get_resource_path(*path_parts):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        return os.path.join(current_dir, *path_parts)
+
 class LogIn:
     def __init__(self, container, app):
         """Initialize the login page frame and setup all UI components."""
@@ -32,7 +41,7 @@ class LogIn:
         self.create_login_form()
 
     def logo_image(self):
-        image = Image.open("logo.png").resize((110, 100)).convert("RGBA")
+        image = Image.open(get_resource_path("PHOTO", "logo.png")).resize((110, 100)).convert("RGBA")
         datas = image.getdata()
         new_data = []
         for item in datas:
@@ -96,11 +105,12 @@ class LogIn:
 
     def create_buttons(self):
         """Create the account type selection buttons"""
-        self.create_button_with_frame("patain.jpg", "Patient", x=350, y=200, 
+        #.open(get_resource_path("PHOTO", "logo.png"))
+        self.create_button_with_frame(get_resource_path("PHOTO", "patain.jpg"), "Patient", x=350, y=200, 
                                        command=lambda: self.show_login("Patient"))
-        self.create_button_with_frame("doctorimage.jpg", "Doctor", x=550, y=200, 
+        self.create_button_with_frame(get_resource_path("PHOTO", "doctorimage.jpg"), "Doctor", x=550, y=200, 
                                        command=lambda: self.show_login("Doctor"))
-        self.create_button_with_frame("admin.jpg", "Admin", x=750, y=200, 
+        self.create_button_with_frame(get_resource_path("PHOTO", "admin.jpg"), "Admin", x=750, y=200, 
                                        command=lambda: self.show_login("Admin"))
 
     def create_login_form(self):
@@ -161,8 +171,9 @@ class LogIn:
         if self.validate_account_selection():
             # Add the code here for login verification
             if dbf.check_username(self.username_entry.get()) and dbf.check_password(self.username_entry.get(),self.password_entry.get()):
-                user_data = dbf.usernametodahboarf(self.username_entry.get())
-                print(f"DEBUG HERE!####################User data returned: {user_data}#########")
+                patientuser_data = dbf.usernametodahboarf(self.username_entry.get())
+                dbf.SenderFile(patientuser_data)
+                print(f"DEBUG HERE!####################patient data returned: {patientuser_data}#########")
                 self.app.show_frame(PatientPage)
             else:
                 self.error_message.config(text="Wrong username or Password,Try Again!")  # Hide the error message if login is successful
@@ -173,6 +184,10 @@ class LogIn:
             # Add the code here for login verification
             if dbf.check_usernameD(self.username_entry.get()) and dbf.check_passwordD(self.username_entry.get(),self.password_entry.get()):
                self.app.show_frame(DoctorPage)
+               doctoruser_data=dbf.usernametodahboardoctor(self.username_entry.get())
+               dbf.SenderDB(doctoruser_data)
+               print(f"DEBUG HERE!####################doctor data returned: {doctoruser_data}#########")
+
             else:
                 self.error_message.config(text="Wrong doctor or Password,Try Again!")  # Hide the error message if login is successful
 
