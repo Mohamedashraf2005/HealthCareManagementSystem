@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from welcome_page import WelcomePage

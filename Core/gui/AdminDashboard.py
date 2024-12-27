@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import Label, Button, Entry, Frame, DISABLED, NORMAL
+from tkinter import Frame, Entry, Label, StringVar, Radiobutton, ttk, Canvas, VERTICAL, RIGHT, Y, LEFT, BOTH, X, Button
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from tkinter import ttk
@@ -408,6 +409,155 @@ class AdminDashboard:
 
     def add_doc(self):
         print("Add clicked")
+        print("\n#############3DEBUG HERE ###############\n")
+ # Clear existing adddoc_frame if it exists
+        for widget in self.frame.winfo_children():
+            if isinstance(widget, Frame) and widget.winfo_name() == "adddoc_frame":
+                widget.destroy()
+
+        # Create a frame for the text box
+        text_box_frame = Frame(self.frame, bg="#f8f9fa")
+        text_box_frame.place(x=208, y=250, width=800, height=40)
+
+        # Create a text box (Entry widget) to display patient info
+        example_addDoctor_info_entry = Entry(
+            text_box_frame,
+            font=("Times new roman", 30),
+            width=50,
+            borderwidth=0,
+            justify="center",
+            fg="white",
+            bg="#808080"
+        )
+        example_addDoctor_info_entry.pack(expand=True)
+        example_addDoctor_info_entry.insert(0, "Add Doctor")
+
+        # Create a modern frame for the doctor data
+        adddoc_frame = Frame(self.frame, name="adddoc_frame", bg="#f8f9fa", bd=0)
+        adddoc_frame.place(x=208, y=300, width=800, height=400)
+
+        # Create a canvas to hold the frame
+        canvas = Canvas(adddoc_frame, bg="#f8f9fa", bd=0, highlightthickness=0)
+        canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+        # Create a scrollbar
+        scrollbar = ttk.Scrollbar(adddoc_frame, orient=VERTICAL, command=canvas.yview)
+        scrollbar.pack(side=RIGHT, fill=Y)
+
+        # Configure the canvas
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.bind("<Configure>", lambda e: canvas.config(scrollregion=canvas.bbox("all")))
+
+        # Create a frame inside the canvas to hold doctor input fields
+        inner_frame = Frame(canvas, bg="#f8f9fa")
+        canvas.create_window((0, 0), window=inner_frame, anchor='nw')
+
+        # Create labels and entry fields for the doctor form
+        fields = [
+            ("Name", "name"),
+            ("Username", "username"),
+            ("Password", "password"),
+            ("Age", "age"),
+            ("Phone", "phone"),
+            ("Specialization", "specialization"),
+            ("Qualification", "qualification"),
+            ("Years of Experience", "years_of_experience"),
+            ("Session Fee", "session_fee"),
+            ("Availability One", "availability_one"),
+            ("Availability Two", "availability_two"),
+            ("Rating", "rating"),
+        ]
+
+        self.entries = {}
+        for label_text, field_name in fields:
+            label = Label(inner_frame, text=label_text, bg="#f8f9fa")
+            label.pack(pady=5)
+            entry = Entry(inner_frame, width=50)
+            entry.pack(pady=5)
+            self.entries[field_name] = entry
+
+        # Create gender selection
+        self.gender_var = StringVar(value="Male")
+        gender_label = Label(inner_frame, text="Gender", bg="#f8f9fa")
+        gender_label.pack(pady=5)
+        male_radio = Radiobutton(inner_frame, text="Male", variable=self.gender_var, value="Male", bg="#f8f9fa")
+        female_radio = Radiobutton(inner_frame, text="Female", variable=self.gender_var, value="Female", bg="#f8f9fa")
+        male_radio.pack(pady=5)
+        female_radio.pack(pady=5)
+
+        # Create Confirm button
+        confirm_button = Button(inner_frame, text="Confirm", command=self.add_doctor)
+        confirm_button.pack(pady=20)
+
+        # Update the scroll region of the canvas
+        inner_frame.update_idletasks()
+        canvas.config(scrollregion=canvas.bbox("all"))
+
+        # Initialize database
+        self.init_db()
+
+    def init_db(self):
+        """Initialize the database and create the doctors table if it doesn't exist."""
+        self.conn = sqlite3.connect(db_path)
+        self.cursor = self.conn.cursor()
+
+    def add_doctor(self):
+        """Add a new doctor to the database."""
+        # Gather data from the entry fields
+        doctor_data = {
+            "name": self.entries["name"].get(),
+            "username": self.entries["username"].get(),
+            "password": self.entries["password"].get(),
+            "age": self.entries["age"].get(),
+            "phone": self.entries["phone"].get(),
+            "specialization": self.entries["specialization"].get(),
+            "qualification": self.entries["qualification"].get(),
+            "years_of_experience": self.entries["years_of_experience"].get(),
+            "session_fee": self.entries["session_fee"].get(),
+            "availability_one": self.entries["availability_one"].get(),
+            "availability_two": self.entries["availability_two"].get(),
+            "rating": self.entries["rating"].get(),
+            "gender": self.gender_var.get()
+        }
+
+        # Insert data into the database
+        self.cursor.execute('''
+            INSERT INTO doctors (name, username, password, age, phone, specialization, qualification, 
+                                 years_of_experience, session_fee, availability_one, availability_two, 
+                                 rating, gender) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            doctor_data["name"],
+            doctor_data["username"],
+            doctor_data["password"],
+            doctor_data["age"],
+            doctor_data["phone"],
+            doctor_data["specialization"],
+            doctor_data["qualification"],
+            doctor_data["years_of_experience"],
+            doctor_data["session_fee"],
+            doctor_data["availability_one"],
+            doctor_data["availability_two"],
+            doctor_data["rating"],
+            doctor_data["gender"]
+        ))
+
+        # Commit the changes and clear the entry fields
+        self.conn.commit()
+        self.clear_entries()
+
+        # Optionally, you can show a success message
+        print("Doctor added successfully!")
+
+    def clear_entries(self):
+        """Clear all entry fields after adding a doctor."""
+        for entry in self.entries.values():
+            entry.delete(0, tk.END)
+        self.gender_var.set("Male")  # Reset gender selection to Male
+
+    def __del__(self):
+        """Close the database connection when the object is deleted."""
+        self.conn.close()
 
     def update_doc(self):
         print("Update Doc clicked")
