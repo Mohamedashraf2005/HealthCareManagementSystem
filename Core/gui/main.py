@@ -28,7 +28,7 @@ class MainApplication:
         self.frames[PatientPage]= PatientPage(self.container, self)
         # Hena 3shan yStart B welcome page
 
-        self.show_frame(WelcomePage)
+        self.show_frame(AdminDashboard)
 
     
     def show_frame(self, cont):
