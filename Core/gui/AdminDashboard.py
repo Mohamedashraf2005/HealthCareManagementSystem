@@ -5,6 +5,7 @@ import customtkinter as ctk
 from PIL import Image, ImageTk
 from tkinter import ttk
 import tkinter as tk
+from tkinter import messagebox
 import os
 import sqlite3
 import time
@@ -545,8 +546,183 @@ class AdminDashboard:
     def update_doc(self):
         print("Update Doc clicked")
 
+        def update_doctor_fee():
+            username = self.username_entry.get().strip()
+            SessionfeeEGP = self.SessionfeeEGP_entry.get().strip()
+
+            # Validate inputs
+            if not username or not SessionfeeEGP:
+                messagebox.showerror("Error", "Please fill in all fields.")
+                return
+
+            try:
+                SessionfeeEGP = float(SessionfeeEGP)
+            except ValueError:
+                messagebox.showerror("Error", "Session Fee must be a valid number.")
+                return
+
+            # Database operation
+            try:
+                conn = sqlite3.connect(db_path)  # Update with your database path if needed
+                cursor = conn.cursor()
+
+                # Check if the doctor exists
+                cursor.execute("SELECT * FROM doctor WHERE username = ?", (username,))
+                doctor = cursor.fetchone()
+
+                if not doctor:
+                    messagebox.showerror("Error", "Doctor not found.")
+                    return
+
+                # Update the session fee
+                cursor.execute("UPDATE doctor SET SessionfeeEGP = ? WHERE username = ?", (SessionfeeEGP, username))
+                conn.commit()
+                messagebox.showinfo("Success", "Session Fee updated successfully.")
+            except sqlite3.Error as e:
+                messagebox.showerror("Database Error", str(e))
+            finally:
+                conn.close()
+
+        # Destroy existing frame if present
+        for widget in self.frame.winfo_children():
+            if isinstance(widget, Frame) and widget.winfo_name() == "updatedoc_frame":
+                widget.destroy()
+
+        # Create a text box frame
+        text_box_frame = Frame(self.frame, bg="#f8f9fa")
+        text_box_frame.place(x=208, y=250, width=800, height=40)
+
+        example_UpdateDoctor_info_entry = Entry(
+            text_box_frame,
+            font=("Times new roman", 30),
+            width=50,
+            borderwidth=0,
+            justify="center",
+            fg="white",
+            bg="#808080"
+        )
+        example_UpdateDoctor_info_entry.pack(expand=True)
+        example_UpdateDoctor_info_entry.insert(0, "Update Doctor")
+
+        # Create a modern frame for the doctor data
+        updatedoc_frame = Frame(self.frame, name="updatedoc_frame", bg="#f8f9fa", bd=0)
+        updatedoc_frame.place(x=208, y=300, width=800, height=400)
+
+        # Create a canvas to hold the frame
+        canvas = Canvas(updatedoc_frame, bg="#f8f9fa", bd=0, highlightthickness=0)
+        canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+        # Create a scrollbar
+        scrollbar = ttk.Scrollbar(updatedoc_frame, orient=VERTICAL, command=canvas.yview)
+        scrollbar.pack(side=RIGHT, fill=Y)
+
+        # Configure the canvas
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.bind("<Configure>", lambda e: canvas.config(scrollregion=canvas.bbox("all")))
+
+        # Create a frame inside the canvas to hold doctor input fields
+        inner_frame = Frame(canvas, bg="#f8f9fa")
+        canvas.create_window((0, 0), window=inner_frame, anchor='nw')
+
+        # Labels and Entry fields for Username and New Session Fee
+        Label(inner_frame, text="Username:", font=("Times New Roman", 18), bg="#f8f9fa").grid(row=0, column=0, padx=20, pady=10, sticky=W)
+        self.username_entry = Entry(inner_frame, font=("Times New Roman", 16), width=30)
+        self.username_entry.grid(row=0, column=1, padx=20, pady=10)
+
+        Label(inner_frame, text="New Session Fee (EGP):", font=("Times New Roman", 18), bg="#f8f9fa").grid(row=1, column=0, padx=20, pady=10, sticky=W)
+        self.SessionfeeEGP_entry = Entry(inner_frame, font=("Times New Roman", 16), width=30)
+        self.SessionfeeEGP_entry.grid(row=1, column=1, padx=20, pady=10)
+
+        # Confirm button
+        confirm_button = Button(inner_frame, text="Confirm", font=("Times New Roman", 16), bg="#007bff", fg="white",
+                                command=update_doctor_fee)
+        confirm_button.grid(row=2, columnspan=2, pady=20)
+
+
     def remove_doc(self):
         print("Remove Doc clicked")
+
+        def delete_doctor():
+            username = self.username_entry.get().strip()
+
+            # Validate input
+            if not username:
+                messagebox.showerror("Error", "Please enter the username.")
+                return
+
+            # Database operation
+            try:
+                conn = sqlite3.connect(db_path)  # Update with your database path if needed
+                cursor = conn.cursor()
+
+                # Check if the doctor exists
+                cursor.execute("SELECT * FROM doctor WHERE username = ?", (username,))
+                doctor = cursor.fetchone()
+
+                if not doctor:
+                    messagebox.showerror("Error", "Doctor not found.")
+                    return
+
+                # Delete the doctor
+                cursor.execute("DELETE FROM doctor WHERE username = ?", (username,))
+                conn.commit()
+                messagebox.showinfo("Success", "Doctor deleted successfully.")
+            except sqlite3.Error as e:
+                messagebox.showerror("Database Error", str(e))
+            finally:
+                conn.close()
+
+        # Destroy existing frame if present
+        for widget in self.frame.winfo_children():
+            if isinstance(widget, Frame) and widget.winfo_name() == "updatedoc_frame":
+                widget.destroy()
+
+        # Create a text box frame
+        text_box_frame = Frame(self.frame, bg="#f8f9fa")
+        text_box_frame.place(x=208, y=250, width=800, height=40)
+
+        example_UpdateDoctor_info_entry = Entry(
+            text_box_frame,
+            font=("Times new roman", 30),
+            width=50,
+            borderwidth=0,
+            justify="center",
+            fg="white",
+            bg="#808080"
+        )
+        example_UpdateDoctor_info_entry.pack(expand=True)
+        example_UpdateDoctor_info_entry.insert(0, "Delete Doctor")
+
+        # Create a modern frame for the doctor data
+        updatedoc_frame = Frame(self.frame, name="updatedoc_frame", bg="#f8f9fa", bd=0)
+        updatedoc_frame.place(x=208, y=300, width=800, height=400)
+
+        # Create a canvas to hold the frame
+        canvas = Canvas(updatedoc_frame, bg="#f8f9fa", bd=0, highlightthickness=0)
+        canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+        # Create a scrollbar
+        scrollbar = ttk.Scrollbar(updatedoc_frame, orient=VERTICAL, command=canvas.yview)
+        scrollbar.pack(side=RIGHT, fill=Y)
+
+        # Configure the canvas
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.bind("<Configure>", lambda e: canvas.config(scrollregion=canvas.bbox("all")))
+
+        # Create a frame inside the canvas to hold doctor input fields
+        inner_frame = Frame(canvas, bg="#f8f9fa")
+        canvas.create_window((0, 0), window=inner_frame, anchor='nw')
+
+        # Label and Entry field for Username
+        Label(inner_frame, text="Username:", font=("Times New Roman", 18), bg="#f8f9fa").grid(row=0, column=0, padx=20, pady=10, sticky=W)
+        self.username_entry = Entry(inner_frame, font=("Times New Roman", 16), width=30)
+        self.username_entry.grid(row=0, column=1, padx=20, pady=10)
+
+        # Confirm button
+        confirm_button = Button(inner_frame, text="Confirm", font=("Times New Roman", 16), bg="#007bff", fg="white",
+                                command=delete_doctor)
+        confirm_button.grid(row=1, columnspan=2, pady=20)
+
 
     def show_splash_then_exit(self):
         def splash_screen():
