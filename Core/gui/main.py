@@ -3,6 +3,7 @@ from tkinter import messagebox
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from welcome_page import WelcomePage
+from AboutUS import About_Us
 from SignUP import SignUp
 from SignIN import LogIn
 from AdminDashboard import AdminDashboard
@@ -26,9 +27,9 @@ class MainApplication:
         self.frames[AdminDashboard]= AdminDashboard(self.container, self)
         self.frames[DoctorPage]= DoctorPage(self.container, self)
         self.frames[PatientPage]= PatientPage(self.container, self)
-        # Hena 3shan yStart B welcome page
+        # self.frames[About_Us]= About_Us(self, self)
 
-        self.show_frame(AdminDashboard)
+        self.show_frame(WelcomePage)
 
     
     def show_frame(self, cont):
