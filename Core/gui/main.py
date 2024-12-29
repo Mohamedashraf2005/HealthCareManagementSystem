@@ -22,7 +22,7 @@ class MainApplication:
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
         self.frames = {}
-        self.frames[SplashScreen] = SplashScreen(self.container, self)
+        # self.frames[SplashScreen] = SplashScreen(self.container, self)
         self.frames[WelcomePage] = WelcomePage(self.container, self)
         self.frames[LogIn] = LogIn(self.container, self)
         self.frames[SignUp] = SignUp(self.container, self)
@@ -32,7 +32,7 @@ class MainApplication:
         self.frames[About_Us]= About_Us(self.container, self)
         # Hena 3shan yStart B welcome page
 
-        self.show_frame(SplashScreen)
+        self.show_frame(PatientPage)
 
     
     def show_frame(self, cont):

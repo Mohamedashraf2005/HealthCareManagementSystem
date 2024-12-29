@@ -4,6 +4,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 import os
 import sqlite3
+from idpatientlist import idlistpatient
 
 #if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
 db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')

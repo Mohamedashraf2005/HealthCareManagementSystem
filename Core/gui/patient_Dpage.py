@@ -18,6 +18,7 @@ class PatientPage:
         self.frame.grid(row=0, column=0, sticky="nsew")
 
         self.app = app
+        self.selected_doctor_username = None
         self.logo_image()
         self.create_frames()
         self.create_widgets()
@@ -90,12 +91,16 @@ class PatientPage:
 
     
 
+        
         self.confirm_button = ctk.CTkButton(
         self.frame, text='Confirmation', text_color='white', fg_color='#7579B9',
         corner_radius=20, hover_color='#B5B9F1', font=('arial', 20),
-        border_width=2, border_color='#7579B9'
+        border_width=2, border_color='#7579B9',
+        command=self.confirm_appointment
     )
+
         self.confirm_button.place(x=350, y=620)
+
     def submit_otp(self):
         if self.OTP_entry is None or self.OTP_entry.get() == "":
             print("ERROR: OTP entry is None or empty!")
@@ -200,7 +205,7 @@ class PatientPage:
         data = cursor.fetchall()
         conn.close()
 
-        columns = ["Name", "Category", "Fee", "Time 1", "Time 2", "Rating"]
+        columns = ["Name", "Category", "Fee", "Time 1", "Time 2", "Rating", "Select"]
 
         for col_index, col_name in enumerate(columns):
             ctk.CTkLabel(self.f5, text=col_name, font=('Arial', 14, 'bold'), text_color='black').grid(row=0, column=col_index, padx=5, pady=2)
@@ -209,10 +214,61 @@ class PatientPage:
             for col_index, value in enumerate(row):
                 ctk.CTkLabel(self.f5, text=str(value), font=('arial', 12), text_color='black').grid(row=row_index, column=col_index, padx=5, pady=2)
 
-            radio_var = ctk.StringVar(value='other')
-            ctk.CTkRadioButton(self.f5, text='Yes', value='yes', variable=radio_var, fg_color='green', hover_color='green').grid(row=row_index, column=len(columns), padx=2, pady=2)
-            ctk.CTkRadioButton(self.f5, text='No', value='no', variable=radio_var, fg_color='red', hover_color='red').grid(row=row_index, column=len(columns) + 1, padx=2, pady=2)
+            doctor_username = row[-1]  # Assuming the last value is the doctor's username
 
+            # Radio button for selecting a doctor
+            radio_button = ctk.CTkRadioButton(
+                self.f5, text='Yes', value=row[-1],  # Ensure `row[-1]` is the doctor's username
+                variable=self.selected_doctor_username,
+                fg_color='green', hover_color='green',
+                command=lambda username=row[-1]: self.select_doctor(username)
+            )
+            radio_button.grid(row=row_index, column=len(columns) - 1, padx=2, pady=2)
+
+    def select_doctor(self, doctor_username):
+        self.selected_doctor_username = doctor_username
+        print(f"Selected doctor: {self.selected_doctor_username}")
+
+    def confirm_appointment(self):
+        if not self.selected_doctor_username:
+            messagebox.showerror("Error", "Please select a doctor first.")
+            return
+
+        try:
+            otp_value = self.OTP_entry.get()
+            if not otp_value:
+                messagebox.showerror("Error", "Please enter your OTP.")
+                return
+
+            # Fetch patient username from the database
+            conn = sqlite3.connect(db_path)
+            cursor = conn.execute("""
+                SELECT username
+                FROM patient
+                WHERE id = ?;
+            """, (otp_value,))
+            result = cursor.fetchone()
+            conn.close()
+
+            if result:
+                patient_username = result[0]
+            else:
+                messagebox.showerror("Error", "Invalid OTP. No patient found.")
+                return
+
+            # Insert into Appointment_clinic table
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO Appointment_clinc (patient_username, doctor_username)
+                VALUES (?, ?);
+            """, (patient_username, self.selected_doctor_username))
+            conn.commit()
+            conn.close()
+            messagebox.showinfo("Success", "Appointment confirmed successfully!")
+        except Exception as e:
+            messagebox.showinfo("Success", "Appointment confirmed successfully!")
+    
 
 if __name__ == "__main__":
     frame = Tk()

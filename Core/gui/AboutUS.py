@@ -26,10 +26,10 @@ class About_Us:
         # Add male and female sections
         self.Male_Section("Anas Elgezawy", "anaselgezawy@gmail.com")
         self.Male_Section("Ali Elbahrawy", "ali.fathy.ali20@gmail.com")
-        self.Male_Section("Mohamed Ahmed", "aboalianamedo@gmail.com")
+        self.Male_Section("Mohamed Ahmed", "mohmedahmedali159@gmail.com")
         self.Male_Section("Mohamed Ashraf", "mohamedachrvf@gmail.com")
         self.Female_Section("Eman Hekal", "hekaleman103@gmail.com")
-        self.Female_Section("Mariam Ahmed", "anaselgezawy@gmail.com")
+        self.Female_Section("Mariam Ahmed", "mariamsalama369@gmail.com")
 
     def logo_image(self):
         image = Image.open(get_resource_path("PHOTO", "logo.png")).resize((150, 100)).convert("RGBA")
