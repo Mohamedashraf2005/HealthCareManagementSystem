@@ -634,9 +634,9 @@ class AdminDashboard:
         self.SessionfeeEGP_entry.grid(row=1, column=1, padx=20, pady=10)
 
         # Confirm button
-        confirm_button = Button(inner_frame, text="Confirm", font=("Times New Roman", 16), bg="#007bff", fg="white",
+        confirm_button = Button(inner_frame, text="Confirm", font=("Times New Roman", 16), bg="#808080", fg="white",
                                 command=update_doctor_fee)
-        confirm_button.grid(row=2, columnspan=2, pady=20)
+        confirm_button.grid(row=7, columnspan=2,padx=40, pady=20)
 
 
     def remove_doc(self):
@@ -719,9 +719,9 @@ class AdminDashboard:
         self.username_entry.grid(row=0, column=1, padx=20, pady=10)
 
         # Confirm button
-        confirm_button = Button(inner_frame, text="Confirm", font=("Times New Roman", 16), bg="#007bff", fg="white",
+        confirm_button = Button(inner_frame, text="Confirm", font=("Times New Roman", 16), bg="#808080", fg="white",
                                 command=delete_doctor)
-        confirm_button.grid(row=1, columnspan=2, pady=20)
+        confirm_button.grid(row=2, columnspan=2, padx=60, pady=20)
 
 
     def show_splash_then_exit(self):
