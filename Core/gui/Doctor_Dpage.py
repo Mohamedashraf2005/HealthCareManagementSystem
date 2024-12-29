@@ -3,6 +3,8 @@ from tkinter import *
 from PIL import ImageTk, Image
 import os
 import sqlite3
+from tkinter import messagebox
+import dbfunctions as dbf
 
 #if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
 db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
@@ -13,6 +15,7 @@ def get_resource_path(*path_parts):
 
 class DoctorPage:
     def __init__(self, container, app):
+        print("\nDEBUG  doctor HEREEEEE######\n")
         # self.frame = frame
         # self.frame.geometry('1200x750+150+25')
         # self.frame.title('Patient page')
@@ -54,30 +57,39 @@ class DoctorPage:
 
         # Frame for Appointment Requests
         self.f3 = ctk.CTkFrame(self.frame, width=692, height=350, corner_radius=20, fg_color='white')
-        self.f3.place(x=20, y=200)
+        self.f3.place(x=80, y=200)
 
         # Frame for Doctor Info
-        self.f6 = ctk.CTkFrame(self.frame, width=250, height=100, corner_radius=20, fg_color='white')
-        self.f6.place(x=830, y=250)
+        # self.f6 = ctk.CTkFrame(self.frame, width=250, height=100, corner_radius=20, fg_color='white')
+        # self.f6.place(x=830, y=250)
 
-        # Frame for Rating
-        self.f7 = ctk.CTkFrame(self.frame, width=250, height=100, corner_radius=20, fg_color='white')
-        self.f7.place(x=830, y=380)
+        # # Frame for Rating
+        # self.f7 = ctk.CTkFrame(self.frame, width=250, height=100, corner_radius=20, fg_color='white')
+        # self.f7.place(x=830, y=380)
+
+        self.f354 = ctk.CTkFrame(self.frame, width=160, height=80, corner_radius=20, fg_color='white')
+        self.f354.place(x=930, y=100)
 
     def create_widgets(self):
+        self.OTP_entry = self.create_input_field(self.f354, "Enter OTP", 10)
+
+        btn_submit = ctk.CTkButton(self.f354, text="Confirm", fg_color='#3971a9',
+                                   text_color='white', corner_radius=20,
+                                   command=self.submit_otp, font=("Arial", 17))
+        btn_submit.place(x=9, y=50)
         # Logout Button
         self.logout_button = ctk.CTkButton(
             self.f1, text='Log Out', fg_color='#336EA6', text_color='white',
-            border_width=2, border_color='#336EA6', corner_radius=20, hover_color='#B5B9F1'
+            border_width=2, border_color='#336EA6', corner_radius=20, hover_color='#B5B9F1',command=self.app.root.destroy
         )
         self.logout_button.place(x=850, y=12)
 
         # Welcome Label
-        self.welcome_label = ctk.CTkLabel(
-            self.f2, text='Welcome, Dr: #########', text_color='black',
-            font=('Adobe Garamond Pro', 25, 'bold')
-        )
-        self.welcome_label.place(x=300, y=10)
+        # self.welcome_label = ctk.CTkLabel(
+        #     self.f2, text='Welcome, Dr: #########', text_color='black',
+        #     font=('Adobe Garamond Pro', 25, 'bold')
+        # )
+        # self.welcome_label.place(x=300, y=10)
 
         # Appointment Requests Label
         self.appointment_label = Label(
@@ -95,28 +107,109 @@ class DoctorPage:
         self.f5.place(x=5, y=55)
 
         # Example content in the scrollable frame
-        ctk.CTkLabel(self.f5, text='Label Example', font=('arial', 15)).grid(column=1, row=1)
-        radio_var = ctk.StringVar(value='other')
-        ctk.CTkRadioButton(self.f5, text='Yes', value='yes', variable=radio_var, fg_color='green', hover_color='green').grid(row=1, column=199)
+        ctk.CTkLabel(self.f5, text='\tYou have No UpComing Appointements!', font=('arial', 25)).grid(column=1, row=1)
+        # radio_var = ctk.StringVar(value='other')
+        # ctk.CTkRadioButton(self.f5, text='Yes', value='yes', variable=radio_var, fg_color='green', hover_color='green').grid(row=1, column=199)
 
-        # Doctor Info Labels
-        self.name_label = ctk.CTkLabel(self.f6, text='DR :', text_color='black', font=('Felix Titling', 20))
-        self.name_label.place(x=15, y=20)
 
-        self.age_label = ctk.CTkLabel(self.f6, text='Age :', text_color='black', font=('Felix Titling', 20))
-        self.age_label.place(x=15, y=60)
+    def submit_otp(self):
+        if self.OTP_entry is None or self.OTP_entry.get() == "":
+            print("ERROR: OTP entry is None or empty!")
+        else:
+            otp_value = self.OTP_entry.get()
+            print(f"OTP Value: {otp_value}")
 
-        # Rating Frame Label
-        self.rating_label = ctk.CTkLabel(self.f7, text='RATING', text_color='black', font=('Felix Titling', 20))
-        self.rating_label.place(x=80, y=20)
+            # Call OTPVerify function to validate the OTP
+            if dbf.OTPVerifydoctor(otp_value):
+                # If OTP is valid, proceed with further actions
+                print("OTP is valid, proceeding with further actions...")
+                # messagebox.showinfo("Success", "OTP Verified Successfully!")
+                
+                conn = sqlite3.connect(db_path)
+                cursor = conn.execute("""
+                    SELECT name, age, rating, username
+                    FROM doctor
+                    WHERE id = ?;
+                """, (otp_value,))
+                datadoctor = cursor.fetchall()
+                conn.close()
 
-        # Confirmation Button
-        self.confirm_button = ctk.CTkButton(
-            self.frame, text='Confirmation', text_color='white', fg_color='#7579B9',
-            corner_radius=20, hover_color='#B5B9F1', font=('arial', 20),
-            border_width=2, border_color='#7579B9'
-        )
-        self.confirm_button.place(x=700, y=580)
+
+                if datadoctor:
+                    first_doctor_name = datadoctor[0][0]
+
+                    # Check if the name already starts with 'Dr ' and handle accordingly
+                    if first_doctor_name.startswith("Dr "):
+                        display_name = first_doctor_name  # Use as is
+                    else:
+                        display_name = f"Dr {first_doctor_name}"  # Add 'Dr ' prefix
+
+                    # Create the Welcome label
+                    self.welcome_label = ctk.CTkLabel(
+                        self.f2,
+                        text=f'Welcome, {display_name},',
+                        text_color='black',
+                        font=('Adobe Garamond Pro', 30, 'bold')
+                    )
+                    self.welcome_label.place(x=310, y=10)
+
+                    # Call the function to display the welcome message
+                    self.show_welcome_message(display_name)
+                    # Initialize y-coordinate for label placement
+                    y_offset = 60
+
+                    # Loop through the patient data and display it
+                    for doctor in datadoctor:
+                        name, age, rating, username = doctor
+                       
+                        self.f6 = ctk.CTkFrame(self.frame, width=275, height=100, corner_radius=20, fg_color='white')
+                        self.f6.place(x=830, y=250)
+
+                        # Frame for Rating
+                        self.f7 = ctk.CTkFrame(self.frame, width=250, height=70, corner_radius=20, fg_color='white')
+                        self.f7.place(x=830, y=380)
+
+                        username_label = ctk.CTkLabel(self.f6, text=f'Username: {username}', text_color='black', font=('Felix Titling', 20))
+                        username_label.place(x=15, y=y_offset + 160)
+                        self.name_label = ctk.CTkLabel(self.f6, text=f'DR : {name}', text_color='black', font=('Felix Titling', 20))
+                        self.name_label.place(x=15, y=20)
+
+                        self.age_label = ctk.CTkLabel(self.f6, text=f'Age : {age}', text_color='black', font=('Felix Titling', 20))
+                        self.age_label.place(x=15, y=60)
+
+                        self.rating_label = ctk.CTkLabel(self.f7, text=f'RATING : {rating}', text_color='black', font=('Felix Titling', 20))
+                        self.rating_label.place(x=50, y=20)
+
+                        # Update y_offset to separate records visually
+                        y_offset += 200
+
+                    # Destroy the f355 frame
+                    if self.f354:
+                        self.f354.destroy()
+                        print("f354 frame has been removed.")
+            else:
+                # If OTP is invalid, show an error message
+                print("Invalid OTP!")
+                messagebox.showerror("Error", "Invalid OTP, please try again.")
+
+    def show_welcome_message(self, first_doctor_name):
+        welcome_text = f"Welcome, {first_doctor_name}"
+        self.update_label(welcome_text, 0)
+
+    def update_label(self, welcome_text, index):
+        # Update the label text one character at a time
+        if index < len(welcome_text):
+            current_text = welcome_text[:index + 1]
+            self.welcome_label.configure(text=current_text)
+            # Call update_label again after 100ms
+            self.f2.after(50, self.update_label, welcome_text, index + 1)  # هنا استخدم self.f2
+
+    def create_input_field(self, frame, label_text, y_pos, show=None):
+        entry = ctk.CTkEntry(frame, width=150, height=35, corner_radius=10, border_width=1.5,
+                             border_color="black", fg_color="white", text_color="black",
+                             placeholder_text=f"{label_text}", show=show)
+        entry.place(x=5, y=y_pos)
+        return entry
 
 # Run the application
 # if __name__ == "__main__":

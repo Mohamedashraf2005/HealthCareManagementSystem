@@ -3,6 +3,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 from SignIN import LogIn
 from SignUP import SignUp
+from AboutUS import About_Us
 import os
 
 def get_resource_path(*path_parts):
@@ -27,9 +28,6 @@ class WelcomePage:
         self.create_widgets()
 
    
-
-
-
     def logo_image(self):
         image = Image.open(get_resource_path("PHOTO", "logo.png")).resize((110, 100)).convert("RGBA")
         datas = image.getdata()
@@ -56,20 +54,13 @@ class WelcomePage:
                               hover_color='#A3A6F1')
         btn1.place(x=15, y=20)
 
-        btn2 = ctk.CTkButton(f1, text='Doctors', fg_color='#B5B9F1', text_color='black', 
+        btn2 = ctk.CTkButton(f1, text='About us', fg_color='#B5B9F1', text_color='black', 
                               border_width=2, border_color="black", corner_radius=20, 
-                              hover_color='#A3A6F1')
+                              hover_color='#A3A6F1',
+                             command=lambda: self.app.show_frame(About_Us))
         btn2.place(x=165, y=20)
 
-        btn3 = ctk.CTkButton(f1, text='About us', fg_color='#B5B9F1', text_color='black', 
-                              border_width=2, border_color="black", corner_radius=20, 
-                              hover_color='#A3A6F1')
-        btn3.place(x=315, y=20)
-
-        btn4 = ctk.CTkButton(f1, text='Contact us', fg_color='#B5B9F1', text_color='black', 
-                              border_width=2, border_color="black", corner_radius=20, 
-                              hover_color='#A3A6F1')
-        btn4.place(x=465, y=20)
+      
 
         # Add navigation to SignUp page
         btn5 = ctk.CTkButton(f1, text='Sign up', fg_color='black', text_color='white', 

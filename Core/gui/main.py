@@ -1,14 +1,15 @@
 import tkinter as tk
-from tkinter import messagebox
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from welcome_page import WelcomePage
-from AboutUS import About_Us
 from SignUP import SignUp
 from SignIN import LogIn
 from AdminDashboard import AdminDashboard
 from Doctor_Dpage import DoctorPage
 from patient_Dpage import PatientPage
+from splashscreen import SplashScreen 
+from AboutUS import About_Us
+
 class MainApplication:
     def __init__(self, root):
         self.root = root
@@ -21,15 +22,17 @@ class MainApplication:
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
         self.frames = {}
+        self.frames[SplashScreen] = SplashScreen(self.container, self)
         self.frames[WelcomePage] = WelcomePage(self.container, self)
         self.frames[LogIn] = LogIn(self.container, self)
         self.frames[SignUp] = SignUp(self.container, self)
         self.frames[AdminDashboard]= AdminDashboard(self.container, self)
         self.frames[DoctorPage]= DoctorPage(self.container, self)
         self.frames[PatientPage]= PatientPage(self.container, self)
-        # self.frames[About_Us]= About_Us(self, self)
+        self.frames[About_Us]= About_Us(self.container, self)
+        # Hena 3shan yStart B welcome page
 
-        self.show_frame(WelcomePage)
+        self.show_frame(SplashScreen)
 
     
     def show_frame(self, cont):

@@ -7,6 +7,9 @@ from patient_Dpage import PatientPage
 import dbfunctions as dbf
 import os
 import sqlite3
+from tkinter import messagebox
+import customtkinter as ctk
+
 
 #if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
 db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
@@ -19,6 +22,7 @@ class LogIn:
     def __init__(self, container, app):
         """Initialize the login page frame and setup all UI components."""
         # Create frame within the container
+        print("\nDEBUG  login HEREEEEE######\n")
         self.frame = Frame(container, width=1200, height=750, bg="#B5B9F1")
         self.frame.grid(row=0, column=0, sticky="nsew")
         
@@ -112,6 +116,7 @@ class LogIn:
                                        command=lambda: self.show_login("Doctor"))
         self.create_button_with_frame(get_resource_path("PHOTO", "admin.jpg"), "Admin", x=750, y=200, 
                                        command=lambda: self.show_login("Admin"))
+    
 
     def create_login_form(self):
         """Create the login form with username, password fields and login button"""
@@ -172,7 +177,18 @@ class LogIn:
             # Add the code here for login verification
             if dbf.check_username(self.username_entry.get()) and dbf.check_password(self.username_entry.get(),self.password_entry.get()):
                 patientuser_data = dbf.usernametodahboarf(self.username_entry.get())
-                dbf.SenderFile(patientuser_data)
+                # addditontemp="40"
+                
+                OTP=dbf.returnidlolo(patientuser_data)
+                
+                # OTP=465465;
+                message = f"""
+            Your verification code is:
+                    {OTP}
+                Use this code to complete your login. If you did not request this, please ignore this message.
+                """
+                messagebox.showinfo("Two-Factor Authentication", message)
+              
                 print(f"DEBUG HERE!####################patient data returned: {patientuser_data}#########")
                 self.app.show_frame(PatientPage)
             else:
@@ -185,9 +201,19 @@ class LogIn:
             if dbf.check_usernameD(self.username_entry.get()) and dbf.check_passwordD(self.username_entry.get(),self.password_entry.get()):
                self.app.show_frame(DoctorPage)
                doctoruser_data=dbf.usernametodahboardoctor(self.username_entry.get())
-               dbf.SenderDB(doctoruser_data)
                print(f"DEBUG HERE!####################doctor data returned: {doctoruser_data}#########")
-
+               OTP=dbf.returnidnono(doctoruser_data)
+                
+                # OTP=465465;
+               messagedoc = f"""
+                Your verification code is:
+                        {OTP}
+                    Use this code to complete your login. If you did not request this, please ignore this message.
+                    """
+               messagebox.showinfo("Two-Factor Authentication", messagedoc)
+              
+               self.app.show_frame(DoctorPage)
+            
             else:
                 self.error_message.config(text="Wrong doctor or Password,Try Again!")  # Hide the error message if login is successful
 

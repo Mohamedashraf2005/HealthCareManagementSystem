@@ -122,6 +122,19 @@ def usernametodahboarf(usernameget):
         conn.close()
     return result[2]
 
+def returnidlolo(usernamegetter):
+    conn = sqlite3.connect(db_path)  
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT * FROM patient WHERE username = ?", (usernamegetter,))
+        result = cursor.fetchone()
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        result = None
+    finally:
+        conn.close()
+    return result[0]
+
 # usernameget = 'youssef1790'
 # user_data = usernametodahboarf(usernameget)
 #if user_data:
@@ -142,24 +155,56 @@ def usernametodahboardoctor(usernamegetter):
         conn.close()
     return result[2]
 
-import sqlite3
+from idpatientlist import idlistpatient
 
-file_path = r"D:\FAI\03SWE\Project\HCMS_Github\database\usernameSandR.txt"
+def OTPVerify(ourOTP):
+    # Convert the OTP to integer
+    
+    checkotpid = int(ourOTP)  # Convert the OTP to an integer    
+    # Check if the OTP ID is in the idlistpatient
+    if checkotpid in idlistpatient:
+        print("VALID OTP")
+        return True
+    else:
+        print("INVALID OTP")
+        return False
+    
 
-def SenderFile(usernamesender):
-    with open(file_path, "w") as file:
-        file.write(usernamesender)
-    print(f"Username '{usernamesender}' saved successfully.")
-
-def RecieverFile():
-   
+from idoctorlist import idlistdoctor
+def OTPVerifydoctor(ourOTP2):
+    # Convert the OTP to integer
+    
+    checkotpiddoc = int(ourOTP2)  # Convert the OTP to an integer    
+    # Check if the OTP ID is in the idlistpatient
+    if checkotpiddoc in idlistdoctor:
+        print("VALID OTP")
+        return True
+    else:
+        print("INVALID OTP")
+        return False
+    
+def returnidnono(usernamegetter):
+    conn = sqlite3.connect(db_path)  
+    cursor = conn.cursor()
     try:
-        with open(file_path, "r") as file:
-            username = file.read().strip()  
-        print(f"Username retrieved: {username}")
-        return username
-    except FileNotFoundError:
-        print("No username found. File does not exist.")
-        return None
+        cursor.execute("SELECT * FROM doctor WHERE username = ?", (usernamegetter,))
+        result = cursor.fetchone()
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        result = None
+    finally:
+        conn.close()
+    return result[0]
+
+# def check_passwordD(username, password):
+#     conn = sqlite3.connect(db_path)
+#     cursor = conn.cursor()
+#     cursor.execute("SELECT * FROM doctor WHERE username = ? AND password = ?", (username, password))
+    # result = cursor.fetchone()
+    # conn.close()
+    # if result:
+    #     return True
+    # else:
+    #     return False
 
 
