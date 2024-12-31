@@ -1,17 +1,19 @@
 import os
 import sqlite3
+from idoctorlist import idlistdoctor
+from idpatientlist import idlistpatient 
 
 #if you want connect with database write inside connect (db_path) مهم مهم مهم مهم مهم 
 db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'HCMSclinic.db')
 
 #Ashraf-check if Name is valid in table database
-def checkname(name):
+def checkname(name): #Signup class
     for i in name: 
         if not (i.isalpha() or i.isspace()):
             return False
     return True 
 
-def input_age(age):
+def input_age(age):  #Admin ,Signup class
     try:
         age = int(age)  
         if 0 <= age <= 120: 
@@ -29,6 +31,7 @@ def check_gender (gender):
     else :
         print("enter valid gender Male or Female")
         return None
+
 #eman mohamed creat 2 fanctions : 1=>check for username
 #                                 2=>check for password
 def create_database():
@@ -135,13 +138,6 @@ def returnidlolo(usernamegetter):
         conn.close()
     return result[0]
 
-# usernameget = 'youssef1790'
-# user_data = usernametodahboarf(usernameget)
-#if user_data:
-#    print(f"patient data: {user_data}")
-#else:
-#   print("patient does not exist")
-
 def usernametodahboardoctor(usernamegetter):
     conn = sqlite3.connect(db_path)  
     cursor = conn.cursor()
@@ -155,8 +151,6 @@ def usernametodahboardoctor(usernamegetter):
         conn.close()
     return result[2]
 
-from idpatientlist import idlistpatient
-
 def OTPVerify(ourOTP):
     # Convert the OTP to integer
     
@@ -169,8 +163,6 @@ def OTPVerify(ourOTP):
         print("INVALID OTP")
         return False
     
-
-from idoctorlist import idlistdoctor
 def OTPVerifydoctor(ourOTP2):
     # Convert the OTP to integer
     
@@ -196,15 +188,6 @@ def returnidnono(usernamegetter):
         conn.close()
     return result[0]
 
-# def check_passwordD(username, password):
-#     conn = sqlite3.connect(db_path)
-#     cursor = conn.cursor()
-#     cursor.execute("SELECT * FROM doctor WHERE username = ? AND password = ?", (username, password))
-    # result = cursor.fetchone()
-    # conn.close()
-    # if result:
-    #     return True
-    # else:
-    #     return False
+
 
 

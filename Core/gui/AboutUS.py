@@ -51,26 +51,30 @@ class About_Us:
         f2 = Frame(self.frame, width=900, height=100, bg='#B5B9F1')  
         f2.place(x=1, y=120)
 
-        lab1 = ctk.CTkLabel(f2, text='About US', fg_color='black', text_color='white', font=('Helvetica', 33), corner_radius=15)
+        lab1 = ctk.CTkLabel(f2, text='About US', fg_color='black', text_color='white', font=('Times new roman', 33), corner_radius=15)
         lab1.place(x=510, y=15)
+
+        # Add the new title under "About Us"
+        about_text = "We’re AI students Batch 2027 \nThis project is all about our teamwork and dedication,\nWe proudly presented 29th December 2024!"
+        lab2 = ctk.CTkLabel(self.frame, text=about_text, fg_color='black', text_color='white', font=('Times new roman', 20), corner_radius=15)
+        lab2.place(x=380, y=180)  # Adjust the position as needed
 
     def Male_Section(self, name, Email):
         male_icon = Image.open(get_resource_path("PHOTO", "ManIco.png")).resize((50, 50)).convert("RGBA")
         male_icon = ImageTk.PhotoImage(male_icon)
         male_label = Label(self.frame, image=male_icon, compound="left",
                            text=f"  {name} \n  {Email}",
-                           font=("Helvetica", 15), bg="#B5B9F1", fg="black")
+                           font=("Times new roman", 15), bg="#B5B9F1", fg="black")
         male_label.image = male_icon
         male_label.place(x=150, y=self.male_y)  
         self.male_y += 100  
 
     def Female_Section(self, name, Email):
-        
         female_icon = Image.open(get_resource_path("PHOTO", "FemaleIco.png")).resize((50, 50)).convert("RGBA")
         female_icon = ImageTk.PhotoImage(female_icon)
         female_label = Label(self.frame, image=female_icon, compound="left",
-                             text=f"  {name} \n  {Email}",
-                             font=("Helvetica", 15), bg="#B5B9F1", fg="black")
+                            text=f"  {name} \n  {Email}",
+                            font=("Times new roman", 15), bg="#B5B9F1", fg="black")
         female_label.image = female_icon
         female_label.place(x=750, y=self.female_y)  
         self.female_y += 100  
@@ -80,4 +84,3 @@ class About_Us:
                 border_width=2, border_color='#336EA6', corner_radius=20, hover_color='#B5B9F1',command=self.app.root.destroy
             )
         self.logout_button.place(x=1000, y=25)
-

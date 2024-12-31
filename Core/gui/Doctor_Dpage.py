@@ -185,7 +185,8 @@ class DoctorPage:
 
                     # Destroy the f355 frame
                     if self.f354:
-                        self.f354.destroy()
+                        self.f356 = ctk.CTkFrame(self.frame, width=160, height=80, corner_radius=20, fg_color='#b5b9f1')
+                        self.f356.place(x=930, y=100)
                         print("f354 frame has been removed.")
             else:
                 # If OTP is invalid, show an error message

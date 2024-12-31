@@ -14,13 +14,13 @@ class SplashScreen:
         self.container = container
         self.app = app
         self.animation_index = 0  # Track animation step
-        self.total_duration = 3500  # Total splash screen duration in milliseconds
+        self.total_duration = 450  # Total splash screen duration in milliseconds
         self.frame_interval = self.total_duration // 20  # Number of animation frames
 
         # Names for the animation sequence
         self.names = [
             "Anas Elgezawy", "Ali Elbahrawy",
-            "Eman Hekal", "Mariem Ahmed",
+            "Eman Hekal", "Mariam Ahmed",
             "Mohamed Ahmed", "Mohamed Ashraf"
         ]
         self.header_texts = ["Welcome to DocHub", "Your Health, Simplified", "Management Made Easy"]
@@ -106,7 +106,7 @@ class SplashScreen:
 
             # Update animation index
             self.animation_index += 1
-            self.container.after(225, self.animate_splash)  # Schedule next frame (0.2-second delay)
+            self.container.after(130, self.animate_splash)  # Schedule next frame (0.2-second delay)
         else:
             self.finish_splash()
 

@@ -57,7 +57,8 @@ class PatientPage:
         self.f355 = ctk.CTkFrame(self.frame, width=160, height=80, corner_radius=20, fg_color='white')
         self.f355.place(x=930, y=100)
 
-        
+       
+
         
 
     def create_widgets(self):
@@ -70,15 +71,9 @@ class PatientPage:
 
         self.logout_button = ctk.CTkButton(
             self.f1, text='Log Out', fg_color='#336EA6', text_color='white',
-            border_width=2, border_color='#336EA6', corner_radius=20, hover_color='#B5B9F1',command=self.app.root.destroy
+            border_width=2, border_color='#336EA6', corner_radius=20, hover_color='#B5B9F1', command=self.app.root.destroy
         )
         self.logout_button.place(x=850, y=12)
-
-        # self.welcome_label = ctk.CTkLabel(
-        #     self.f2, text='Welcome,############', text_color='black',
-        #     font=('Adobe Garamond Pro', 30, 'bold')
-        # )
-        # self.welcome_label.place(x=400, y=0)
 
         self.appointment_label = Label(
             self.f3, text='Appointment requests', fg='black', bg='white',
@@ -89,16 +84,12 @@ class PatientPage:
         self.f5 = ctk.CTkScrollableFrame(self.f3, width=710, height=260, corner_radius=10)
         self.f5.place(x=5, y=55)
 
-    
-
-        
         self.confirm_button = ctk.CTkButton(
-        self.frame, text='Confirmation', text_color='white', fg_color='#7579B9',
-        corner_radius=20, hover_color='#B5B9F1', font=('arial', 20),
-        border_width=2, border_color='#7579B9',
-        command=self.confirm_appointment
-    )
-
+            self.frame, text='Confirmation', text_color='white', fg_color='#7579B9',
+            corner_radius=20, hover_color='#B5B9F1', font=('arial', 20),
+            border_width=2, border_color='#7579B9',
+            command=self.confirm_appointment
+        )
         self.confirm_button.place(x=350, y=620)
 
     def submit_otp(self):
@@ -112,20 +103,19 @@ class PatientPage:
             if dbf.OTPVerify(otp_value):
                 # If OTP is valid, proceed with further actions
                 print("OTP is valid, proceeding with further actions...")
-                # messagebox.showinfo("Success", "OTP Verified Successfully!")
                 
-                conn = sqlite3.connect(db_path)
-                cursor = conn.execute("""
-                    SELECT name, age, gender, username
-                    FROM patient
-                    WHERE id = ?;
-                """, (otp_value,))
-                datapatient = cursor.fetchall()
-                conn.close()
+                with sqlite3.connect(db_path) as conn:
+                    cursor = conn.execute("""
+                        SELECT name, age, gender, username
+                        FROM patient
+                        WHERE id = ?;
+                    """, (otp_value,))
+                    datapatient = cursor.fetchall()
+                    print(datapatient)
 
                 if datapatient:
-                    
                     first_patient_name = datapatient[0][0]
+                    usernamepatientpass=datapatient[0][3]
 
                     # Create the Welcome label
                     self.welcome_label = ctk.CTkLabel(
@@ -169,13 +159,14 @@ class PatientPage:
 
                     # Destroy the f355 frame
                     if self.f355:
-                        self.f355.destroy()
+                        self.f356 = ctk.CTkFrame(self.frame, width=160, height=80, corner_radius=20, fg_color='#b5b9f1')
+                        self.f356.place(x=930, y=100)
                         print("f355 frame has been removed.")
             else:
                 # If OTP is invalid, show an error message
                 print("Invalid OTP!")
                 messagebox.showerror("Error", "Invalid OTP, please try again.")
-                
+
     def show_welcome_message(self, first_patient_name):
         welcome_text = f"Welcome, {first_patient_name}"
         self.update_label(welcome_text, 0)
@@ -186,8 +177,7 @@ class PatientPage:
             current_text = welcome_text[:index + 1]
             self.welcome_label.configure(text=current_text)
             # Call update_label again after 100ms
-            self.f2.after(50, self.update_label, welcome_text, index + 1)  # هنا استخدم self.f2
-
+            self.f2.after(50, self.update_label, welcome_text, index + 1)
 
     def create_input_field(self, frame, label_text, y_pos, show=None):
         entry = ctk.CTkEntry(frame, width=150, height=35, corner_radius=10, border_width=1.5,
@@ -197,13 +187,12 @@ class PatientPage:
         return entry
 
     def fetch_and_display_data(self):
-        conn = sqlite3.connect(db_path)
-        cursor = conn.execute("""
-            SELECT name, specialization, SessionfeeEGP, availabilityone, availabilitytwo, rating
-            FROM doctor;
-        """)
-        data = cursor.fetchall()
-        conn.close()
+        with sqlite3.connect(db_path) as conn:
+            cursor = conn.execute("""
+                SELECT username, name, specialization, SessionfeeEGP, availabilityone, availabilitytwo, rating
+                FROM doctor;
+            """)
+            data = cursor.fetchall()
 
         columns = ["Name", "Category", "Fee", "Time 1", "Time 2", "Rating", "Select"]
 
@@ -211,64 +200,82 @@ class PatientPage:
             ctk.CTkLabel(self.f5, text=col_name, font=('Arial', 14, 'bold'), text_color='black').grid(row=0, column=col_index, padx=5, pady=2)
 
         for row_index, row in enumerate(data, start=1):
-            for col_index, value in enumerate(row):
+            for col_index, value in enumerate(row[1:]):
                 ctk.CTkLabel(self.f5, text=str(value), font=('arial', 12), text_color='black').grid(row=row_index, column=col_index, padx=5, pady=2)
 
-            doctor_username = row[-1]  # Assuming the last value is the doctor's username
+            doctor_username = row[0]  # Assuming the last value is the doctor's username
 
             # Radio button for selecting a doctor
             radio_button = ctk.CTkRadioButton(
-                self.f5, text='Yes', value=row[-1],  # Ensure `row[-1]` is the doctor's username
+                self.f5, text='Yes', value=row[0],  # Ensure `row[-1]` is the doctor's username
                 variable=self.selected_doctor_username,
                 fg_color='green', hover_color='green',
-                command=lambda username=row[-1]: self.select_doctor(username)
+                command=lambda username=row[0]: self.select_doctor(username)
             )
             radio_button.grid(row=row_index, column=len(columns) - 1, padx=2, pady=2)
 
     def select_doctor(self, doctor_username):
-        self.selected_doctor_username = doctor_username
-        print(f"Selected doctor: {self.selected_doctor_username}")
+        if not hasattr(self, 'selected_doctors'):
+            self.selected_doctors = []  # قائمة لتخزين أسماء الأطباء المختارين
+
+        if doctor_username not in self.selected_doctors:
+            self.selected_doctors.append(doctor_username)  # إضافة الطبيب إلى القائمة
+            print(f"Doctor added: {doctor_username}")
+        else:
+            self.selected_doctors.remove(doctor_username)  # إزالة الطبيب من القائمة إذا كان موجودًا
+            print(f"Doctor removed: {doctor_username}")
 
     def confirm_appointment(self):
-        if not self.selected_doctor_username:
-            messagebox.showerror("Error", "Please select a doctor first.")
+        if not hasattr(self, 'selected_doctors') or not self.selected_doctors:
+            messagebox.showerror("Error", "Please select at least one doctor.")
+            return
+
+        if not hasattr(self, 'OTP_entry') or self.OTP_entry is None:
+            messagebox.showerror("Error", "OTP Entry widget is not initialized.")
+            return
+
+        otp_value = self.OTP_entry.get()
+        if not otp_value:
+            messagebox.showerror("Error", "Please enter your OTP.")
             return
 
         try:
-            otp_value = self.OTP_entry.get()
-            if not otp_value:
-                messagebox.showerror("Error", "Please enter your OTP.")
-                return
+            # Fetch patient username and details
+            with sqlite3.connect(db_path) as conn:
+                cursor = conn.execute("""
+                    SELECT username, name
+                    FROM patient
+                    WHERE id = ?;
+                """, (otp_value,))
+                patient_data = cursor.fetchone()
 
-            # Fetch patient username from the database
-            conn = sqlite3.connect(db_path)
-            cursor = conn.execute("""
-                SELECT username
-                FROM patient
-                WHERE id = ?;
-            """, (otp_value,))
-            result = cursor.fetchone()
-            conn.close()
-
-            if result:
-                patient_username = result[0]
-            else:
+            if not patient_data:
                 messagebox.showerror("Error", "Invalid OTP. No patient found.")
                 return
 
-            # Insert into Appointment_clinic table
-            conn = sqlite3.connect(db_path)
-            cursor = conn.cursor()
-            cursor.execute("""
-                INSERT INTO Appointment_clinc (patient_username, doctor_username)
-                VALUES (?, ?);
-            """, (patient_username, self.selected_doctor_username))
-            conn.commit()
-            conn.close()
-            messagebox.showinfo("Success", "Appointment confirmed successfully!")
+            patient_username, patient_name = patient_data
+
+            # Record the appointments for all selected doctors
+            with sqlite3.connect(db_path) as conn:
+                for doctor_username in self.selected_doctors:
+                    conn.execute("""
+                        INSERT INTO Appointment_clinc (patient_username, doctor_username)
+                        VALUES (?, ?);
+                    """, (patient_username, doctor_username))
+                conn.commit()
+
+            messagebox.showinfo("Success", f"Appointments confirmed for {patient_name} with selected doctors.")
+            print(f"Appointments successfully created for patient {patient_username} with doctors {self.selected_doctors}.")
+
+            # Clear the list of selected doctors after confirmation
+            self.selected_doctors.clear()
+        except sqlite3.Error as e:
+            messagebox.showerror("Database Error", f"An error occurred: {e}")
+            print(f"Database error: {e}")
         except Exception as e:
-            messagebox.showinfo("Success", "Appointment confirmed successfully!")
-    
+            messagebox.showerror("Error", f"An unexpected error occurred: {e}")
+            print(f"Unexpected error: {e}")
+
 
 if __name__ == "__main__":
     frame = Tk()
