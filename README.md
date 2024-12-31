@@ -64,7 +64,7 @@ The application uses the following APIs:
 
 ## License
 
-This project is licensed under the  [LICENSE](LICENSE) 
+This project is licensed under the  [LICENSE](LICENSE.txt) 
 
 ## Contact
 For any inquiries or feedback, please reach out to
