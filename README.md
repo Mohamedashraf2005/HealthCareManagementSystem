@@ -34,6 +34,10 @@ cd HealthCareManagementSystem\Core\gui
 ```
 Or you Can dowonload the Project directly as a ZIP folder.
 
+### Install the Required Packages:
+```
+pip install -r requirements.txt
+```
 ## Usage
 
 1. Run the application:
