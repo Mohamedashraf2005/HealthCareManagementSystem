@@ -46,7 +46,8 @@ pip install -r requirements.txt
    python main.py
    ```
 2. The application will start, and you can interact with the GUI.
-
+3. This ***Optional*** if you want to Access  and View database ,Click this ***link*** to download
+[DB SQLite Browser ](https://download.sqlitebrowser.org/DB.Browser.for.SQLite-v3.13.1-win64.msi)     
 ## API
 
 The application uses the following APIs:
@@ -68,7 +69,7 @@ The application uses the following APIs:
 
 ## License
 
-This project is licensed under the  [LICENSE](LICENSE) 
+This project is licensed under the  [LICENSE](LICENSE.txt) 
 
 ## Contact
 For any inquiries or feedback, please reach out to
