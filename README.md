@@ -32,7 +32,8 @@ To run the application locally, follow these steps in cmd:
 git clone https://github.com/Mohamedashraf2005/HealthCareManagementSystem.git
 cd HealthCareManagementSystem\Core\gui
 ```
-Or you Can dowonload the Project directly as a ZIP folder.
+Or you Can dowonload the Project directly as a [ZIP folder](https://github.com/Mohamedashraf2005/HealthCareManagementSystem/archive/refs/heads/main.zip)     
+
 
 ### Install the Required Packages:
 ```
