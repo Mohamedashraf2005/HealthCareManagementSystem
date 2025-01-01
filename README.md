@@ -34,6 +34,10 @@ cd HealthCareManagementSystem\Core\gui
 ```
 Or you Can dowonload the Project directly as a ZIP folder.
 
+### Install the Required Packages:
+```
+pip install -r requirements.txt
+```
 ## Usage
 
 1. Run the application:
@@ -42,7 +46,8 @@ Or you Can dowonload the Project directly as a ZIP folder.
    python main.py
    ```
 2. The application will start, and you can interact with the GUI.
-
+3. This ***Optional*** if you want to Access  and View database ,Click this ***link*** to download
+[DB SQLite Browser ](https://download.sqlitebrowser.org/DB.Browser.for.SQLite-v3.13.1-win64.msi)     
 ## API
 
 The application uses the following APIs:
