@@ -57,10 +57,6 @@ class PatientPage:
         self.f355 = ctk.CTkFrame(self.frame, width=160, height=80, corner_radius=20, fg_color='white')
         self.f355.place(x=930, y=100)
 
-       
-
-        
-
     def create_widgets(self):
         self.OTP_entry = self.create_input_field(self.f355, "Enter OTP", 10)
 

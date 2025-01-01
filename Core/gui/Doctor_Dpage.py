@@ -101,7 +101,7 @@ class DoctorPage:
         # Scrollable Frame for Appointment Requests
         self.f5 = ctk.CTkScrollableFrame(
             self.f3, width=658, height=220,
-            label_text='Name \t\tGender \t\tAge \t\tTime  \t\tDone',
+            label_text='Name \t\tAge \t\tGender \t\tPhone  \t\tDone',
             corner_radius=10
         )
         self.f5.place(x=5, y=55)
@@ -121,8 +121,8 @@ class DoctorPage:
 
             # Call OTPVerify function to validate the OTP
             if dbf.OTPVerifydoctor(otp_value):
-                # If OTP is valid, proceed with further actions
-                print("OTP is valid, proceeding with further actions...")
+                doctor_id = otp_value  # Assuming OTP value is the doctor's ID
+                self.display_assigned_patients(doctor_id)
                 # messagebox.showinfo("Success", "OTP Verified Successfully!")
                 
                 conn = sqlite3.connect(db_path)
@@ -212,9 +212,67 @@ class DoctorPage:
         entry.place(x=5, y=y_pos)
         return entry
 
+
+    def display_assigned_patients(self, doctor_id):
+        """
+        Fetch and display all patients assigned to the logged-in doctor.
+        
+        Args:
+        doctor_id (str): ID of the logged-in doctor.
+        """
+        try:
+            # Connect to the database
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+
+            # Step 1: Get patient usernames from the Appointment_clinic table
+            cursor.execute("""
+                SELECT patient_username
+                FROM Appointment_clinc
+                WHERE doctor_id = ?;
+            """, (doctor_id,))
+            patient_usernames = cursor.fetchall()
+
+            # Flatten the list of tuples
+            patient_usernames = [row[0] for row in patient_usernames]
+
+            # Step 2: Get patient details from the patient table
+            if patient_usernames:
+                cursor.execute(f"""
+                    SELECT name, age, gender, phone
+                    FROM patient
+                    WHERE username IN ({','.join(['?'] * len(patient_usernames))});
+                """, patient_usernames)
+                patient_data = cursor.fetchall()
+
+                # Step 3: Populate the scrollable frame with patient details
+                for widget in self.f5.winfo_children():
+                    widget.destroy()  # Clear any previous data in the frame
+
+                if patient_data:
+                    for idx, (name, age, gender, phone ) in enumerate(patient_data, start=1):
+                        patient_info = f"       {name}          {age}           {gender}        {phone}     "
+                        ctk.CTkLabel(self.f5, text=patient_info, font=('Arial', 15), anchor="w").grid(row=idx, column=0, sticky="w")
+                else:
+                    # No patients found
+                    ctk.CTkLabel(self.f5, text="No assigned patients.", font=('Arial', 15)).grid(row=0, column=0, sticky="w")
+            else:
+                # No patient usernames found
+                ctk.CTkLabel(self.f5, text="No assigned patients.", font=('Arial', 15)).grid(row=0, column=0, sticky="w")
+
+        except sqlite3.Error as e:
+            print(f"Database error: {e}")
+            messagebox.showerror("Error", "Failed to retrieve patient data.")
+
+        finally:
+            if conn:
+                conn.close()
+
 # Run the application
 # if __name__ == "__main__":
 #     frame = Tk()
 #     app = PatientPage(frame)
 #     frame.mainloop()
+
+
 
